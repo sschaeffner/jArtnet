@@ -17,10 +17,7 @@
  */
 package me.sschaeffner.jArtnet;
 
-import me.sschaeffner.jArtnet.packets.ArtDmxPacket;
-import me.sschaeffner.jArtnet.packets.ArtPollPacket;
-import me.sschaeffner.jArtnet.packets.ArtPollReplyPacket;
-import me.sschaeffner.jArtnet.packets.ArtnetPacket;
+import me.sschaeffner.jArtnet.packets.*;
 
 import java.util.Arrays;
 
@@ -119,7 +116,11 @@ public final class ArtnetOpCodes {
                         System.out.println("OP_POLL_REPLY");
                         return ArtPollReplyPacket.fromBytes(bytes);
 
+                    case ArtnetOpCodes.OP_DIAG_DATA:
+                        System.out.println("OP_DIAG_DATA");
+                        return ArtDiagDataPacket.fromBytes(bytes);
                     default:
+                        System.out.println("unimplemented artnet packet: (opcode=" + opCode + ")");
                         break;
                 }
             } else {

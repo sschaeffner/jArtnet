@@ -20,7 +20,7 @@ package me.sschaeffner.jArtnet.packets;
 import me.sschaeffner.jArtnet.ArtnetNode;
 
 /**
- * This is an Artnet package.
+ * This is an Art-Net Packet.
  *
  * @author sschaeffner
  */
@@ -28,7 +28,7 @@ public abstract class ArtnetPacket {
     public static final int UDP_PORT = 0x1936;//6454
     public static final byte[] ID = new byte[]{'A', 'r', 't', '-', 'N', 'e', 't', 0x00};
 
-    protected ArtnetNode sender;
+    private ArtnetNode sender;
 
     public void setSender(ArtnetNode sender) {
         this.sender = sender;

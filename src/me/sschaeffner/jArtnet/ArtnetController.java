@@ -64,15 +64,25 @@ public class ArtnetController {
      * Constructs a new instance of this class.
      */
     public ArtnetController() {
+        this(true, true);
+    }
+
+    /**
+     * Constructs a new instance of this class.
+     */
+    public ArtnetController(boolean enableBroadcast, boolean enableRecieverThread) {
         this.nodes = new ArrayList<>();
         this.listeners = new ArrayList<>();
 
-        BroadcastAddress[] bca = getBroadcastAddresses();
-
-        if (bca.length > 0) {
-            System.out.println("using " + bca[0]);
-            broadcastAddress = bca[0];
-        } else System.err.println("no broadcast address available");
+        if (enableBroadcast) {
+            BroadcastAddress[] bca = getBroadcastAddresses();
+            if (bca.length > 0) {
+                System.out.println("using " + bca[0]);
+                broadcastAddress = bca[0];
+            } else System.err.println("no broadcast address available");
+        } else {
+            this.broadcastAddress = null;
+        }
 
         //open udp socket
         try {
@@ -82,33 +92,37 @@ public class ArtnetController {
             throw new IllegalArgumentException("cannot start ArtnetController: cannot open socket");
         }
 
-        //start receiver thread
-        this.receiverThread = new Thread(() -> {
-            try {
-                System.out.println("Listening on " + InetAddress.getLocalHost().getHostAddress() + ":" + ArtnetPacket.UDP_PORT);
+        if (enableRecieverThread) {
+            //start receiver thread
+            this.receiverThread = new Thread(() -> {
+                try {
+                    System.out.println("Listening on " + InetAddress.getLocalHost().getHostAddress() + ":" + ArtnetPacket.UDP_PORT);
 
-                byte[] receiveData = new byte[600];
-                DatagramPacket receivePacket = new DatagramPacket(receiveData, 0, receiveData.length);
+                    byte[] receiveData = new byte[600];
+                    DatagramPacket receivePacket = new DatagramPacket(receiveData, 0, receiveData.length);
 
-                while (running) {
-                    if (!socket.isClosed()) {
-                        try {
-                            socket.receive(receivePacket);
-                            byte[] data = receivePacket.getData();
-                            InetAddress sender = receivePacket.getAddress();
-                            int port = receivePacket.getPort();
-                            onPacketReceive(data, sender, port);
-                        } catch (SocketException e) {
-                            //do nothing as the socket is just closed
+                    while (running) {
+                        if (!socket.isClosed()) {
+                            try {
+                                socket.receive(receivePacket);
+                                byte[] data = receivePacket.getData();
+                                InetAddress sender = receivePacket.getAddress();
+                                int port = receivePacket.getPort();
+                                onPacketReceive(data, sender, port);
+                            } catch (SocketException e) {
+                                //do nothing as the socket is just closed
+                            }
                         }
                     }
-                }
 
-            } catch (java.io.IOException e) {
-                e.printStackTrace();
-            }
-        });
-        this.receiverThread.start();
+                } catch (java.io.IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            this.receiverThread.start();
+        } else {
+            this.receiverThread = null;
+        }
     }
 
     /**
@@ -335,10 +349,12 @@ public class ArtnetController {
             if (socket.isConnected()) socket.disconnect();
             socket.close();
         }
-        try {
-            receiverThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (receiverThread != null) {
+            try {
+                receiverThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
