@@ -43,31 +43,20 @@ public class ArtIpProgPacketTest {
         //enable programming, disable dhcp, do not return all parameters to default
         //program IP Address, program Subnet Mask, program Port
         byte command = (byte) 0b10000111;
-        byte progIpHi = (byte)192;
-        byte progIp2 = (byte)168;
-        byte progIp1 = (byte)0;
-        byte progIpLo = (byte)10;
-        byte progSmHi = (byte)255;
-        byte progSm2 = (byte)255;
-        byte progSm1 = (byte)0;
-        byte progSmLo = (byte)0;
+        byte[] progIp = new byte[]{(byte)192, (byte)168, (byte)0, (byte)10};
+        byte[] progSm = new byte[]{(byte)255, (byte)255, (byte)0, (byte)0};
+
         byte progPortHi = (byte) 0x19;
         byte progPortLo = (byte) 0x36;
 
-        ArtIpProgPacket pOrig = new ArtIpProgPacket(command, progIpHi, progIp2, progIp1, progIpLo, progSmHi, progSm2, progSm1, progSmLo, progPortHi, progPortLo);
+        ArtIpProgPacket pOrig = new ArtIpProgPacket(command, progIp, progSm, progPortHi, progPortLo);
         byte[] bytes = pOrig.getPacketBytes();
 
         ArtIpProgPacket p = ArtIpProgPacket.fromBytes(bytes);
 
         Assert.assertEquals(command, p.getCommand());
-        Assert.assertEquals(progIpHi, p.getProgIpHi());
-        Assert.assertEquals(progIp2, p.getProgIp2());
-        Assert.assertEquals(progIp1, p.getProgIp1());
-        Assert.assertEquals(progIpLo, p.getProgIpLo());
-        Assert.assertEquals(progSmHi, p.getProgSmHi());
-        Assert.assertEquals(progSm2, p.getProgSm2());
-        Assert.assertEquals(progSm1, p.getProgSm1());
-        Assert.assertEquals(progSmLo, p.getProgSmLo());
+        Assert.assertArrayEquals(progIp, p.getProgIp());
+        Assert.assertArrayEquals(progSm, p.getProgSm());
         Assert.assertEquals(progPortHi, p.getProgPortHi());
         Assert.assertEquals(progPortLo, p.getProgPortLo());
     }
@@ -77,18 +66,13 @@ public class ArtIpProgPacketTest {
         //enable programming, disable dhcp, do not return all parameters to default
         //program IP Address, program Subnet Mask, program Port
         byte command = (byte) 0b10000111;
-        byte progIpHi = (byte)192;
-        byte progIp2 = (byte)168;
-        byte progIp1 = (byte)0;
-        byte progIpLo = (byte)10;
-        byte progSmHi = (byte)255;
-        byte progSm2 = (byte)255;
-        byte progSm1 = (byte)0;
-        byte progSmLo = (byte)0;
+
+        byte[] progIp = new byte[]{(byte)192, (byte)168, (byte)0, (byte)10};
+        byte[] progSm = new byte[]{(byte)255, (byte)255, (byte)0, (byte)0};
         byte progPortHi = (byte) 0x19;
         byte progPortLo = (byte) 0x36;
 
-        ArtIpProgPacket p = new ArtIpProgPacket(command, progIpHi, progIp2, progIp1, progIpLo, progSmHi, progSm2, progSm1, progSmLo, progPortHi, progPortLo);
+        ArtIpProgPacket p = new ArtIpProgPacket(command, progIp, progSm, progPortHi, progPortLo);
 
         ArtnetController controller = new ArtnetController(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));

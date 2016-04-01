@@ -60,7 +60,7 @@ public class ArtDmxPacketTest {
     }
 
     @Test
-    public void automatedLengthTest() {
+    public void automatedLengthTest() throws MalformedArtnetPacketException {
         ArtDmxPacket p = new ArtDmxPacket((byte) 0, (byte) 0, (byte) 0, (byte) 0, new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
         Assert.assertEquals(0x00, p.getLengthHi() & 0xFF);
         Assert.assertEquals(0x10, p.getLength() & 0xFF);

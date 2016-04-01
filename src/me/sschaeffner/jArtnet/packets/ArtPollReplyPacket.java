@@ -73,32 +73,45 @@ public class ArtPollReplyPacket extends ArtnetPacket {
         this.status1 = status1;
         this.estaManLo = estaManLo;
         this.estaManHi = estaManHi;
+
         if (shortName.length != 18) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: shortName has to be 18 bytes long");
         this.shortName = shortName;
+
         if (longName.length != 64) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: longName has to be 64 bytes long");
         this.longName = longName;
+
         if (nodeReport.length != 64) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: nodeReport has to be 4 bytes long");
         this.nodeReport = nodeReport;
+
         this.numPortsHi = numPortsHi;
         this.numPortsLo = numPortsLo;
+
         if (portTypes.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: portTypes has to be 4 bytes long");
         this.portTypes = portTypes;
+
         if (goodInput.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: goodInput has to be 4 bytes long");
         this.goodInput = goodInput;
+
         if (goodOutput.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: goodOutput has to be 4 bytes long");
         this.goodOutput = goodOutput;
+
         if (swIn.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: swIn has to be 4 bytes long");
         this.swIn = swIn;
+
         if (swOut.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: swOut has to be 4 bytes long");
         this.swOut = swOut;
+
         this.swVideo = swVideo;
         this.swMacro = swMacro;
         this.swRemote = swRemote;
         this.style = style;
+
         if (mac.length != 6) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: mac has to be 6 bytes long");
         this.mac = mac;
+
         if (bindIp.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: bindIp has to be 4 bytes long");
         this.bindIp = bindIp;
+
         this.bindIndex = bindIndex;
         this.status2 = status2;
     }

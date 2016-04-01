@@ -40,33 +40,19 @@ public class ArtIpProgReplyPacketTest {
 
     @Test
     public void constructionTest() throws MalformedArtnetPacketException {
-        //enable programming, disable dhcp, do not return all parameters to default
-        //program IP Address, program Subnet Mask, program Port
-        byte progIpHi = (byte)192;
-        byte progIp2 = (byte)168;
-        byte progIp1 = (byte)0;
-        byte progIpLo = (byte)10;
-        byte progSmHi = (byte)255;
-        byte progSm2 = (byte)255;
-        byte progSm1 = (byte)0;
-        byte progSmLo = (byte)0;
+        byte[] progIp = new byte[]{(byte)192, (byte)168, (byte)0, (byte)10};
+        byte[] progSm = new byte[]{(byte)255, (byte)255, (byte)0, (byte)0};
         byte progPortHi = (byte) 0x19;
         byte progPortLo = (byte) 0x36;
         byte status = (byte) 0b01000000;
 
-        ArtIpProgReplyPacket pOrig = new ArtIpProgReplyPacket(progIpHi, progIp2, progIp1, progIpLo, progSmHi, progSm2, progSm1, progSmLo, progPortHi, progPortLo, status);
+        ArtIpProgReplyPacket pOrig = new ArtIpProgReplyPacket(progIp, progSm, progPortHi, progPortLo, status);
         byte[] bytes = pOrig.getPacketBytes();
 
         ArtIpProgReplyPacket p = ArtIpProgReplyPacket.fromBytes(bytes);
 
-        Assert.assertEquals(progIpHi, p.getProgIpHi());
-        Assert.assertEquals(progIp2, p.getProgIp2());
-        Assert.assertEquals(progIp1, p.getProgIp1());
-        Assert.assertEquals(progIpLo, p.getProgIpLo());
-        Assert.assertEquals(progSmHi, p.getProgSmHi());
-        Assert.assertEquals(progSm2, p.getProgSm2());
-        Assert.assertEquals(progSm1, p.getProgSm1());
-        Assert.assertEquals(progSmLo, p.getProgSmLo());
+        Assert.assertArrayEquals(progIp, p.getProgIp());
+        Assert.assertArrayEquals(progSm, p.getProgSm());
         Assert.assertEquals(progPortHi, p.getProgPortHi());
         Assert.assertEquals(progPortLo, p.getProgPortLo());
         Assert.assertEquals(status, p.getStatus());
@@ -74,21 +60,13 @@ public class ArtIpProgReplyPacketTest {
 
     @Test
     public void sendPacketTest() throws MalformedArtnetPacketException {
-        //enable programming, disable dhcp, do not return all parameters to default
-        //program IP Address, program Subnet Mask, program Port
-        byte progIpHi = (byte)192;
-        byte progIp2 = (byte)168;
-        byte progIp1 = (byte)0;
-        byte progIpLo = (byte)10;
-        byte progSmHi = (byte)255;
-        byte progSm2 = (byte)255;
-        byte progSm1 = (byte)0;
-        byte progSmLo = (byte)0;
+        byte[] progIp = new byte[]{(byte)192, (byte)168, (byte)0, (byte)10};
+        byte[] progSm = new byte[]{(byte)255, (byte)255, (byte)0, (byte)0};
         byte progPortHi = (byte) 0x19;
         byte progPortLo = (byte) 0x36;
         byte status = (byte) 0b01000000;
 
-        ArtIpProgReplyPacket p = new ArtIpProgReplyPacket(progIpHi, progIp2, progIp1, progIpLo, progSmHi, progSm2, progSm1, progSmLo, progPortHi, progPortLo, status);
+        ArtIpProgReplyPacket p = new ArtIpProgReplyPacket(progIp, progSm, progPortHi, progPortLo, status);
 
         ArtnetController controller = new ArtnetController(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));

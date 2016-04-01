@@ -35,20 +35,22 @@ public class ArtDmxPacket extends ArtnetPacket {
     /**
      * Constructs a new instance of this class.
      */
-    public ArtDmxPacket(byte sequence, byte physical, byte subUni, byte net, byte lengthHi, byte length, byte[] data) {
+    public ArtDmxPacket(byte sequence, byte physical, byte subUni, byte net, byte lengthHi, byte length, byte[] data) throws MalformedArtnetPacketException {
         this.sequence = sequence;
         this.physical = physical;
         this.subUni = subUni;
         this.net = net;
         this.lengthHi = lengthHi;
         this.length = length;
+
+        if (data.length > 512) throw new MalformedArtnetPacketException("Cannot construct ArtDmxPacket: data too long");
         this.data = data;
     }
 
     /**
      * Constructs a new instance of this class.
      */
-    public ArtDmxPacket(byte sequence, byte physical, byte subUni, byte net, byte[] data) {
+    public ArtDmxPacket(byte sequence, byte physical, byte subUni, byte net, byte[] data) throws MalformedArtnetPacketException {
         this.sequence = sequence;
         this.physical = physical;
         this.subUni = subUni;
@@ -57,6 +59,9 @@ public class ArtDmxPacket extends ArtnetPacket {
         this.lengthHi = (byte)((length >>> 8) & 0xFF);
         this.length = (byte)(length & 0xFF);
         this.data = data;
+        if (data.length > 512) {
+            throw new MalformedArtnetPacketException("Cannot construct ArtDmxPacket: data too long");
+        }
     }
 
     /**

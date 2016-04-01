@@ -36,26 +36,31 @@ public class ArtDiagDataPacket extends ArtnetPacket {
     /**
      * Constructs a new instance of this class.
      */
-    public ArtDiagDataPacket(byte priority, byte lengthHi, byte lengthLo, byte[] data) {
+    public ArtDiagDataPacket(byte priority, byte lengthHi, byte lengthLo, byte[] data) throws MalformedArtnetPacketException {
         this.priority = priority;
         this.lengthHi = lengthHi;
         this.lengthLo = lengthLo;
+
+        if (data.length > 512) throw new MalformedArtnetPacketException("Cannot construct ArtDiagDataPacket: data too long");
         this.data = data;
     }
 
     /**
      * Constructs a new instance of this class.
      */
-    public ArtDiagDataPacket(byte priority, byte[] data) {
+    public ArtDiagDataPacket(byte priority, byte[] data) throws MalformedArtnetPacketException {
         this(priority, (byte) (data.length >> 8), (byte) data.length, data);
     }
 
     /**
      * Constructs a new instance of this class.
      */
-    public ArtDiagDataPacket(byte priority, String message) {
+    public ArtDiagDataPacket(byte priority, String message) throws MalformedArtnetPacketException {
         this.priority = priority;
         this.data = stringToAsciiArrayNullTerminated(message);
+        if (data.length > 512) {
+            throw new MalformedArtnetPacketException("Cannot construct ArtDiagDataPacket: data too long");
+        }
         this.lengthHi = (byte) (this.data.length >> 8);
         this.lengthLo = (byte) this.data.length;
     }

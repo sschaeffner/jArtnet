@@ -27,29 +27,19 @@ public class ArtIpProgReplyPacket extends ArtnetPacket {
     private static final byte protVerHi = 3;
     private static final byte protVerLo = 14;
 
-    private final byte progIpHi;
-    private final byte progIp2;
-    private final byte progIp1;
-    private final byte progIpLo;
-    private final byte progSmHi;
-    private final byte progSm2;
-    private final byte progSm1;
-    private final byte progSmLo;
+    private final byte[] progIp;
+    private final byte[] progSm;
     private final byte progPortHi;
     private final byte progPortLo;
     private final byte status;
 
-    public ArtIpProgReplyPacket(byte progIpHi, byte progIp2, byte progIp1, byte progIpLo,
-                                byte progSmHi, byte progSm2, byte progSm1, byte progSmLo,
-                                byte progPortHi, byte progPortLo, byte status) {
-        this.progIpHi = progIpHi;
-        this.progIp2 = progIp2;
-        this.progIp1 = progIp1;
-        this.progIpLo = progIpLo;
-        this.progSmHi = progSmHi;
-        this.progSm2 = progSm2;
-        this.progSm1 = progSm1;
-        this.progSmLo = progSmLo;
+    public ArtIpProgReplyPacket( byte[] progIp, byte[] progSm, byte progPortHi, byte progPortLo, byte status) throws MalformedArtnetPacketException {
+        if (progIp.length != 4) throw new MalformedArtnetPacketException("Cannot construct ArtIpProgReplyPacket: wrong progIp length");
+        this.progIp = progIp;
+
+        if (progSm.length != 4) throw new MalformedArtnetPacketException("Cannot construct ArtIpProgReplyPacket: wrong progSm length");
+        this.progSm = progSm;
+
         this.progPortHi = progPortHi;
         this.progPortLo = progPortLo;
         this.status = status;
@@ -78,16 +68,16 @@ public class ArtIpProgReplyPacket extends ArtnetPacket {
         bytes[15] = 0;
 
         //progIp
-        bytes[16] = this.progIpHi;
-        bytes[17] = this.progIp2;
-        bytes[18] = this.progIp1;
-        bytes[19] = this.progIpLo;
+        bytes[16] = this.progIp[0];
+        bytes[17] = this.progIp[1];
+        bytes[18] = this.progIp[2];
+        bytes[19] = this.progIp[3];
 
         //progSm
-        bytes[20] = this.progSmHi;
-        bytes[21] = this.progSm2;
-        bytes[22] = this.progSm1;
-        bytes[23] = this.progSmLo;
+        bytes[20] = this.progSm[0];
+        bytes[21] = this.progSm[1];
+        bytes[22] = this.progSm[2];
+        bytes[23] = this.progSm[3];
 
         //progPort
         bytes[24] = this.progPortHi;
@@ -131,22 +121,15 @@ public class ArtIpProgReplyPacket extends ArtnetPacket {
             throw new MalformedArtnetPacketException("cannot construct ArtIpProgPacket from data: protVer not compatible");
         }
 
-        byte rProgIpHi = bytes[16];
-        byte rProgIp2 = bytes[17];
-        byte rProgIp1 = bytes[18];
-        byte rProgIpLo = bytes[19];
-
-        byte rProgSmHi = bytes[20];
-        byte rProgSm2 = bytes[21];
-        byte rProgSm1 = bytes[22];
-        byte rProgSmLo = bytes[23];
+        byte[] rProgIp = new byte[]{bytes[16], bytes[17], bytes[18], bytes[19]};
+        byte[] rProgSm = new byte[]{bytes[20], bytes[21], bytes[22], bytes[23]};
 
         byte rProgPortHi = bytes[24];
         byte rProgPortLo = bytes[25];
 
         byte rStatus = bytes[26];
 
-        return new ArtIpProgReplyPacket(rProgIpHi, rProgIp2, rProgIp1, rProgIpLo, rProgSmHi, rProgSm2, rProgSm1, rProgSmLo, rProgPortHi, rProgPortLo, rStatus);
+        return new ArtIpProgReplyPacket(rProgIp, rProgSm, rProgPortHi, rProgPortLo, rStatus);
     }
 
     public static byte getProtVerHi() {
@@ -157,36 +140,12 @@ public class ArtIpProgReplyPacket extends ArtnetPacket {
         return protVerLo;
     }
 
-    public byte getProgIpHi() {
-        return progIpHi;
+    public byte[] getProgIp() {
+        return progIp;
     }
 
-    public byte getProgIp2() {
-        return progIp2;
-    }
-
-    public byte getProgIp1() {
-        return progIp1;
-    }
-
-    public byte getProgIpLo() {
-        return progIpLo;
-    }
-
-    public byte getProgSmHi() {
-        return progSmHi;
-    }
-
-    public byte getProgSm2() {
-        return progSm2;
-    }
-
-    public byte getProgSm1() {
-        return progSm1;
-    }
-
-    public byte getProgSmLo() {
-        return progSmLo;
+    public byte[] getProgSm() {
+        return progSm;
     }
 
     public byte getProgPortHi() {
