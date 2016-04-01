@@ -15,29 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.sschaeffner.jArtnet.test;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+package me.sschaeffner.jArtnet.packets;
 
 /**
  * @author sschaeffner
  */
-public class ArtnetPacketTest {
+public class MalformedArtnetPacketException extends Exception {
+    private final String detailMessage;
 
-    @Before
-    public void setup() {
-
+    public MalformedArtnetPacketException(String detailMessage) {
+        this.detailMessage = detailMessage;
     }
 
-    @Test
-    public void test() {
-
-    }
-
-    @After
-    public void teardown() {
-
+    @Override
+    public String getMessage() {
+        return this.detailMessage;
     }
 }

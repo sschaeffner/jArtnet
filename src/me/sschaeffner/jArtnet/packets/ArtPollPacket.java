@@ -77,14 +77,14 @@ public class ArtPollPacket extends ArtnetPacket {
         System.arraycopy(opCode, 0, bytes, ArtnetPacket.ID.length, 2);
 
         //protVer
-        bytes[ArtnetPacket.ID.length + 2] = protVerHi;
-        bytes[ArtnetPacket.ID.length + 2 + 1] = protVerLo;
+        bytes[10] = protVerHi;
+        bytes[11] = protVerLo;
 
         //talk to me
-        bytes[ArtnetPacket.ID.length + 2 + 1 + 1] = this.talkToMe;
+        bytes[12] = this.talkToMe;
 
         //priority
-        bytes[ArtnetPacket.ID.length + 2 + 1 + 1 + 1] = this.priority;
+        bytes[13] = this.priority;
 
         return bytes;
     }
@@ -95,10 +95,11 @@ public class ArtPollPacket extends ArtnetPacket {
      * @param bytes  received bytes
      * @return      new instance
      */
-    public static ArtPollPacket fromBytes(byte[] bytes) {
+    public static ArtPollPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
+        //check for correct length
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1 + 1;
-        if (bytes.length < byteArrayLength) {
-            throw new IllegalArgumentException("cannot construct ArtPollPacket from bytes: bytes length not compatible");
+        if (bytes.length != byteArrayLength) {
+            throw new MalformedArtnetPacketException("cannot construct ArtPollPacket from bytes: bytes length not compatible");
         }
 
         byte[] opCode = ArtnetOpCodes.toByteArray(ArtnetOpCodes.OP_POLL);
@@ -106,13 +107,13 @@ public class ArtPollPacket extends ArtnetPacket {
         byte rOpCodeLo = bytes[8];
         byte rOpCodeHi = bytes[9];
         if (rOpCodeLo != opCode[0] || rOpCodeHi != opCode[1]) {
-            throw new IllegalArgumentException("cannot construct ArtPollReplyPacket from bytes: wrong opcode");
+            throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket from bytes: wrong opcode");
         }
 
         byte rProtVerHi = bytes[10];
         byte rProtVerLo = bytes[11];
         if (rProtVerHi < protVerHi || rProtVerLo < protVerLo) {
-            throw new IllegalArgumentException("cannot construct ArtPollPacket from bytes: protVer not compatible");
+            throw new MalformedArtnetPacketException("cannot construct ArtPollPacket from bytes: protVer not compatible");
         }
 
         //no exceptions

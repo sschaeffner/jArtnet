@@ -18,6 +18,7 @@
 package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.packets.ArtDmxPacket;
+import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +27,7 @@ import org.junit.Test;
 /**
  * @author sschaeffner
  */
-public class DmxPacketTest {
+public class ArtDmxPacketTest {
 
     @Before
     public void setup() {
@@ -34,7 +35,7 @@ public class DmxPacketTest {
     }
 
     @Test
-    public void test2() {
+    public void constructionTest() throws MalformedArtnetPacketException {
 
         byte[] data = new byte[512];
         for (int i = 0; i < 512; i++) {
@@ -60,10 +61,15 @@ public class DmxPacketTest {
     }
 
     @Test
-    public void test3() {
+    public void automatedLengthTest() {
         ArtDmxPacket p = new ArtDmxPacket((byte) 0, (byte) 0, (byte) 0, (byte) 0, new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
         Assert.assertEquals(0x00, p.getLengthHi() & 0xFF);
         Assert.assertEquals(0x10, p.getLength() & 0xFF);
+    }
+
+    @Test
+    public void sendPacketTest() {
+        
     }
 
     @After

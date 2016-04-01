@@ -114,7 +114,12 @@ public class ArtIpProgPacket extends ArtnetPacket {
         return bytes;
     }
 
-    public static ArtIpProgPacket fromBytes(byte[] bytes) {
+    public static ArtIpProgPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
+        //check for correct length
+        int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1+1 + 1 + 1 + 4 + 4 + 2 + 8;
+        if (bytes.length != byteArrayLength) {
+            throw new MalformedArtnetPacketException("cannot construct ArtIpProgPacket from bytes: bytes length not compatible");
+        }
 
         //check for correct opcode
         byte[] opCode = ArtnetOpCodes.toByteArray(ArtnetOpCodes.OP_IP_PROG);
@@ -122,14 +127,14 @@ public class ArtIpProgPacket extends ArtnetPacket {
         byte rOpCodeLo = bytes[8];
         byte rOpCodeHi = bytes[9];
         if (rOpCodeLo != opCode[0] || rOpCodeHi != opCode[1]) {
-            throw new IllegalArgumentException("cannot construct ArtIpProgPacket from data: wrong opcode");
+            throw new MalformedArtnetPacketException("cannot construct ArtIpProgPacket from data: wrong opcode");
         }
 
         //check protocol version
         byte rProtVerHi = bytes[10];
         byte rProtVerLo = bytes[11];
         if (rProtVerHi < protVerHi || rProtVerLo < protVerLo) {
-            throw new IllegalArgumentException("cannot construct ArtIpProgPacket from data: protVer not compatible");
+            throw new MalformedArtnetPacketException("cannot construct ArtIpProgPacket from data: protVer not compatible");
         }
 
         byte rCommand = bytes[14];

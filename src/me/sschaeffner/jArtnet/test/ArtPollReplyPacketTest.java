@@ -19,6 +19,7 @@ package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.ArtnetStyleCodes;
 import me.sschaeffner.jArtnet.packets.ArtPollReplyPacket;
+import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,10 +29,10 @@ import java.net.UnknownHostException;
 /**
  * @author sschaeffner
  */
-public class PollReplyPacketTest {
+public class ArtPollReplyPacketTest {
 
     @Test
-    public void test() throws UnknownHostException {
+    public void test() throws UnknownHostException, MalformedArtnetPacketException {
         ArtPollReplyPacket p = new ArtPollReplyPacket(InetAddress.getLocalHost(), (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, new byte[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r'}, new byte[64], new byte[64], (byte)0, (byte)0, new byte[4], new byte[4], new byte[4], new byte[4], new byte[4], (byte)0, (byte)0, (byte)1, ArtnetStyleCodes.ST_CONTROLLER, new byte[6], new byte[4], (byte)0, (byte)255);
         Assert.assertNotNull(p);
 
@@ -40,7 +41,7 @@ public class PollReplyPacketTest {
     }
 
     @Test
-    public void test2() throws UnknownHostException {
+    public void test2() throws UnknownHostException, MalformedArtnetPacketException {
         ArtPollReplyPacket pOrig = new ArtPollReplyPacket(InetAddress.getByAddress(InetAddress.getLocalHost().getAddress()), (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0, new byte[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r'}, new byte[64], new byte[64], (byte)0, (byte)0, new byte[4], new byte[4], new byte[4], new byte[4], new byte[4], (byte)0, (byte)0, (byte)1, ArtnetStyleCodes.ST_CONTROLLER, new byte[6], new byte[4], (byte)0, (byte)255);
 
         byte[] data = pOrig.getPackageBytes();

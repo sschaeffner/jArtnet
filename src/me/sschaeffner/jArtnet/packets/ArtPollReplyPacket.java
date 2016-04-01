@@ -61,7 +61,7 @@ public class ArtPollReplyPacket extends ArtnetPacket {
                               byte[] shortName, byte[] longName, byte[] nodeReport, byte numPortsHi, byte numPortsLo,
                               byte[] portTypes, byte[] goodInput, byte[] goodOutput, byte[] swIn, byte[] swOut,
                               byte swVideo, byte swMacro, byte swRemote, byte style, byte[] mac, byte[] bindIp,
-                              byte bindIndex, byte status2) {
+                              byte bindIndex, byte status2) throws MalformedArtnetPacketException {
         this.address = address;
         this.versInfoH = versInfoH;
         this.versInfoL = versInfoL;
@@ -73,31 +73,31 @@ public class ArtPollReplyPacket extends ArtnetPacket {
         this.status1 = status1;
         this.estaManLo = estaManLo;
         this.estaManHi = estaManHi;
-        if (shortName.length != 18) throw new IllegalArgumentException("shortName has to be 18 bytes long");
+        if (shortName.length != 18) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: shortName has to be 18 bytes long");
         this.shortName = shortName;
-        if (longName.length != 64) throw new IllegalArgumentException("longName has to be 64 bytes long");
+        if (longName.length != 64) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: longName has to be 64 bytes long");
         this.longName = longName;
-        if (nodeReport.length != 64) throw new IllegalArgumentException("nodeReport has to be 4 bytes long");
+        if (nodeReport.length != 64) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: nodeReport has to be 4 bytes long");
         this.nodeReport = nodeReport;
         this.numPortsHi = numPortsHi;
         this.numPortsLo = numPortsLo;
-        if (portTypes.length != 4) throw new IllegalArgumentException("portTypes has to be 4 bytes long");
+        if (portTypes.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: portTypes has to be 4 bytes long");
         this.portTypes = portTypes;
-        if (goodInput.length != 4) throw new IllegalArgumentException("goodInput has to be 4 bytes long");
+        if (goodInput.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: goodInput has to be 4 bytes long");
         this.goodInput = goodInput;
-        if (goodOutput.length != 4) throw new IllegalArgumentException("goodOutput has to be 4 bytes long");
+        if (goodOutput.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: goodOutput has to be 4 bytes long");
         this.goodOutput = goodOutput;
-        if (swIn.length != 4) throw new IllegalArgumentException("swIn has to be 4 bytes long");
+        if (swIn.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: swIn has to be 4 bytes long");
         this.swIn = swIn;
-        if (swOut.length != 4) throw new IllegalArgumentException("swOut has to be 4 bytes long");
+        if (swOut.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: swOut has to be 4 bytes long");
         this.swOut = swOut;
         this.swVideo = swVideo;
         this.swMacro = swMacro;
         this.swRemote = swRemote;
         this.style = style;
-        if (mac.length != 6) throw new IllegalArgumentException("mac has to be 6 bytes long");
+        if (mac.length != 6) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: mac has to be 6 bytes long");
         this.mac = mac;
-        if (bindIp.length != 4) throw new IllegalArgumentException("bindIp has to be 4 bytes long");
+        if (bindIp.length != 4) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: bindIp has to be 4 bytes long");
         this.bindIp = bindIp;
         this.bindIndex = bindIndex;
         this.status2 = status2;
@@ -225,10 +225,11 @@ public class ArtPollReplyPacket extends ArtnetPacket {
      * @param bytes  received bytes
      * @return      new instance
      */
-    public static ArtPollReplyPacket fromBytes(byte[] bytes) {
+    public static ArtPollReplyPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
+        //check for correct length
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 4 + 2 + 2 + 1+1 + 1+1 + 1 + 1 + 1+1 + 18 + 64 + 64 + 1+1 + 4 + 4+4 + 4+4 + 1 + 1 + 1 + 3 + 1 + 6 + 4 + 1 + 1 + 26;
-        if (bytes.length < byteArrayLength) {
-            throw new IllegalArgumentException("cannot construct ArtPollReplyPacket from bytes: bytes length not compatible");
+        if (bytes.length != byteArrayLength) {
+            throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket from bytes: bytes length not compatible");
         }
 
         byte[] opCode = ArtnetOpCodes.toByteArray(ArtnetOpCodes.OP_POLL_REPLY);
@@ -237,7 +238,7 @@ public class ArtPollReplyPacket extends ArtnetPacket {
         byte rOpCodeHi = bytes[9];
 
         if (rOpCodeLo != opCode[0] || rOpCodeHi != opCode[1]) {
-            throw new IllegalArgumentException("cannot construct ArtPollReplyPacket from bytes: wrong opcode");
+            throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket from bytes: wrong opcode");
         }
 
         byte[] addressBytes = new byte[4];
@@ -247,7 +248,7 @@ public class ArtPollReplyPacket extends ArtnetPacket {
             address = InetAddress.getByAddress(addressBytes);
         } catch (UnknownHostException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("cannot construct ArtPollReplyPacket from bytes: wrong address");
+            throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket from bytes: wrong address");
         }
 
         byte versInfoH = bytes[16];

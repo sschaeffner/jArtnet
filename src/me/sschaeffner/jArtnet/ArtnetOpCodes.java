@@ -84,7 +84,7 @@ public final class ArtnetOpCodes {
      * @param bytes data of an Art-Net packet
      * @return      instance of ArtnetPacket
      */
-    public static ArtnetPacket fromBytes(byte[] bytes) {
+    public static ArtnetPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
         //minimum data length
         //packet id -> 8
         //opcode    -> 2

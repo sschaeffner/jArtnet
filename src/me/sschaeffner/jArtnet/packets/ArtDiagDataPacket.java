@@ -66,7 +66,7 @@ public class ArtDiagDataPacket extends ArtnetPacket {
      * @return the package's data as byte array
      */
     @Override
-    public byte[] getPackageBytes() {
+    public byte[] getPackageBytes() throws MalformedArtnetPacketException {
         int length = (this.lengthHi << 8) + this.lengthLo;
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1 + 1 + 1+1 + 1+1 + length;
         byte[] bytes = new byte[byteArrayLength];
@@ -99,13 +99,18 @@ public class ArtDiagDataPacket extends ArtnetPacket {
         if (bytes.length >= length + 18) {
             System.arraycopy(data, 0, bytes, 18, length);
         } else {
-            throw new IllegalStateException("cannot get packet bytes for ArtDiagDataPacket: not enough data for length available");
+            throw new MalformedArtnetPacketException("cannot get packet bytes for ArtDiagDataPacket: not enough data for length available");
         }
 
         return bytes;
     }
 
-    public static ArtDiagDataPacket fromBytes(byte[] bytes) {
+    public static ArtDiagDataPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
+        //check for minimum length
+        int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1 + 1 + 1+1 + 1+1 + 1;
+        if (bytes.length < byteArrayLength) {
+            throw new MalformedArtnetPacketException("cannot construct ArtDiagDataPacket from bytes: bytes length not compatible");
+        }
 
         //check for correct opcode
         byte[] opCode = ArtnetOpCodes.toByteArray(ArtnetOpCodes.OP_DIAG_DATA);
@@ -113,14 +118,14 @@ public class ArtDiagDataPacket extends ArtnetPacket {
         byte rOpCodeLo = bytes[8];
         byte rOpCodeHi = bytes[9];
         if (rOpCodeLo != opCode[0] || rOpCodeHi != opCode[1]) {
-            throw new IllegalArgumentException("cannot construct ArtDiagDataPacket from data: wrong opcode");
+            throw new MalformedArtnetPacketException("cannot construct ArtDiagDataPacket from data: wrong opcode");
         }
 
         //check protocol version
         byte rProtVerHi = bytes[10];
         byte rProtVerLo = bytes[11];
         if (rProtVerHi < protVerHi || rProtVerLo < protVerLo) {
-            throw new IllegalArgumentException("cannot construct ArtDiagDataPacket from data: protVer not compatible");
+            throw new MalformedArtnetPacketException("cannot construct ArtDiagDataPacket from data: protVer not compatible");
         }
 
         //priority
@@ -135,7 +140,7 @@ public class ArtDiagDataPacket extends ArtnetPacket {
         if (bytes.length >= lengthI + 18) {
             System.arraycopy(bytes, 18, data, 0, lengthI);
         } else {
-            throw new IllegalStateException("cannot construct ArtDiagDataPacket from bytes: data too short (is " + (bytes.length - 18)
+            throw new MalformedArtnetPacketException("cannot construct ArtDiagDataPacket from bytes: data too short (is " + (bytes.length - 18)
                     + "; should be " + lengthI + ")");
         }
 

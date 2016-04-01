@@ -65,7 +65,7 @@ public class ArtDmxPacket extends ArtnetPacket {
      * @return the package's data as byte array
      */
     @Override
-    public byte[] getPackageBytes() {
+    public byte[] getPackageBytes() throws MalformedArtnetPacketException {
         int length = (this.lengthHi << 8) + this.length;
 
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1 + 1 + 1 + 1 + 1+1 + length;
@@ -94,13 +94,18 @@ public class ArtDmxPacket extends ArtnetPacket {
         if (bytes.length >= length + 18) {
             System.arraycopy(data, 0, bytes, 18, length);
         } else {
-            throw new IllegalStateException("cannot get packet bytes for ArtDmxPacket: not enough data for length available");
+            throw new MalformedArtnetPacketException("cannot get packet bytes for ArtDmxPacket: not enough data for length available");
         }
 
         return bytes;
     }
 
-    public static ArtDmxPacket fromBytes(byte[] bytes) {
+    public static ArtDmxPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
+        //check for minimum length
+        int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1 + 1 + 1 + 1 + 1+1 + 1;
+        if (bytes.length < byteArrayLength) {
+            throw new MalformedArtnetPacketException("cannot construct ArtDmxPacket from bytes: bytes length not compatible");
+        }
 
         //check for correct opcode
         byte[] opCode = ArtnetOpCodes.toByteArray(ArtnetOpCodes.OP_OUTPUT);
@@ -108,14 +113,14 @@ public class ArtDmxPacket extends ArtnetPacket {
         byte rOpCodeLo = bytes[8];
         byte rOpCodeHi = bytes[9];
         if (rOpCodeLo != opCode[0] || rOpCodeHi != opCode[1]) {
-            throw new IllegalArgumentException("cannot construct ArtDmxPacket from data: wrong opcode");
+            throw new MalformedArtnetPacketException("cannot construct ArtDmxPacket from data: wrong opcode");
         }
 
         //check protocol version
         byte rProtVerHi = bytes[10];
         byte rProtVerLo = bytes[11];
         if (rProtVerHi < protVerHi || rProtVerLo < protVerLo) {
-            throw new IllegalArgumentException("cannot construct ArtPollPacket from data: protVer not compatible");
+            throw new MalformedArtnetPacketException("cannot construct ArtPollPacket from data: protVer not compatible");
         }
 
         //read information
@@ -135,7 +140,7 @@ public class ArtDmxPacket extends ArtnetPacket {
         if (bytes.length >= lengthI + 18) {
             System.arraycopy(bytes, 18, data, 0, lengthI);
         } else {
-            throw new IllegalStateException("cannot construct ArtDmxPacket from bytes: data too short (is " + (bytes.length - 18)
+            throw new MalformedArtnetPacketException("cannot construct ArtDmxPacket from bytes: data too short (is " + (bytes.length - 18)
                     + "; should be " + lengthI + ")");
         }
 

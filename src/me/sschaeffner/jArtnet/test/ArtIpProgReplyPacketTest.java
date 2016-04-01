@@ -22,6 +22,7 @@ import me.sschaeffner.jArtnet.ArtnetNode;
 import me.sschaeffner.jArtnet.ArtnetStyleCodes;
 import me.sschaeffner.jArtnet.packets.ArtIpProgPacket;
 import me.sschaeffner.jArtnet.packets.ArtIpProgReplyPacket;
+import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +40,7 @@ public class ArtIpProgReplyPacketTest {
     }
 
     @Test
-    public void constructionTest() {
+    public void constructionTest() throws MalformedArtnetPacketException {
         //enable programming, disable dhcp, do not return all parameters to default
         //program IP Address, program Subnet Mask, program Port
         byte progIpHi = (byte)192;

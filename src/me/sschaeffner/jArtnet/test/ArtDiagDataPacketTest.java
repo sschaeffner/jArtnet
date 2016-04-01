@@ -22,6 +22,7 @@ import me.sschaeffner.jArtnet.ArtnetController;
 import me.sschaeffner.jArtnet.ArtnetNode;
 import me.sschaeffner.jArtnet.ArtnetStyleCodes;
 import me.sschaeffner.jArtnet.packets.ArtDiagDataPacket;
+import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +40,7 @@ public class ArtDiagDataPacketTest {
     }
 
     @Test
-    public void constructionTest() {
+    public void constructionTest() throws MalformedArtnetPacketException {
         byte priority = ArtNetPriorityCodes.DP_CRITICAL;
         byte[] data = ArtDiagDataPacket.stringToAsciiArrayNullTerminated("Important Message");
         byte lengthHi = (byte) (data.length >> 8);

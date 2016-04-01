@@ -20,13 +20,14 @@ package me.sschaeffner.jArtnet.test;
 import me.sschaeffner.jArtnet.ArtNetPriorityCodes;
 import me.sschaeffner.jArtnet.packets.ArtPollPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
+import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author sschaeffner
  */
-public class PollPacketTest {
+public class ArtPollPacketTest {
 
     @Test
     public void test1() {
@@ -89,7 +90,7 @@ public class PollPacketTest {
     }
 
     @Test
-    public void test4() {
+    public void test4() throws MalformedArtnetPacketException {
         ArtPollPacket pOrig = new ArtPollPacket();
         byte[] data = pOrig.getPackageBytes();
         ArtPollPacket p = ArtPollPacket.fromBytes(data);
