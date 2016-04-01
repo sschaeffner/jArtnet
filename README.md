@@ -11,6 +11,7 @@ Packets currently implemented:
 * ArtIpProg
 * ArtIpProgReply
 * ArtSync
+* ArtTimeCode
 
 Currently tested with:
 
