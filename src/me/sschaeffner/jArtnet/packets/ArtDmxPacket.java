@@ -23,8 +23,6 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
  * @author sschaeffner
  */
 public class ArtDmxPacket extends ArtnetPacket {
-    private static final byte protVerHi = 3;
-    private static final byte protVerLo = 14;
 
     private final byte sequence;
     private final byte physical;

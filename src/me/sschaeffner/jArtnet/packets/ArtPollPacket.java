@@ -27,8 +27,6 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
  * @author sschaeffner
  */
 public class ArtPollPacket extends ArtnetPacket {
-    public static final byte protVerHi = 3;
-    public static final byte protVerLo = 14;
 
     private final byte talkToMe;
     private final byte priority;

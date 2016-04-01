@@ -24,9 +24,6 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
  */
 public class ArtIpProgReplyPacket extends ArtnetPacket {
 
-    private static final byte protVerHi = 3;
-    private static final byte protVerLo = 14;
-
     private final byte[] progIp;
     private final byte[] progSm;
     private final byte progPortHi;
@@ -130,14 +127,6 @@ public class ArtIpProgReplyPacket extends ArtnetPacket {
         byte rStatus = bytes[26];
 
         return new ArtIpProgReplyPacket(rProgIp, rProgSm, rProgPortHi, rProgPortLo, rStatus);
-    }
-
-    public static byte getProtVerHi() {
-        return protVerHi;
-    }
-
-    public static byte getProtVerLo() {
-        return protVerLo;
     }
 
     public byte[] getProgIp() {
