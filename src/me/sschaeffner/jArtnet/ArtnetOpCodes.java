@@ -125,6 +125,9 @@ public final class ArtnetOpCodes {
                     case ArtnetOpCodes.OP_IP_PROG_REPLY:
                         System.out.println("OP_IP_PROG_REPLY");
                         return ArtIpProgReplyPacket.fromBytes(bytes);
+                    case ArtnetOpCodes.OP_SYNC:
+                        System.out.println("OP_SYNC");
+                        return ArtSyncPacket.fromBytes(bytes);
                     default:
                         System.out.println("unimplemented artnet packet: (opcode=" + opCode + ")");
                         break;

@@ -10,6 +10,7 @@ Packets currently implemented:
 * ArtDiagData
 * ArtIpProg
 * ArtIpProgReply
+* ArtSync
 
 Currently tested with:
 
