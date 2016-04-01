@@ -55,7 +55,7 @@ public class ArtIpProgPacketTest {
         byte progPortLo = (byte) 0x36;
 
         ArtIpProgPacket pOrig = new ArtIpProgPacket(command, progIpHi, progIp2, progIp1, progIpLo, progSmHi, progSm2, progSm1, progSmLo, progPortHi, progPortLo);
-        byte[] bytes = pOrig.getPackageBytes();
+        byte[] bytes = pOrig.getPacketBytes();
 
         ArtIpProgPacket p = ArtIpProgPacket.fromBytes(bytes);
 
@@ -73,7 +73,7 @@ public class ArtIpProgPacketTest {
     }
 
     @Test
-    public void sendPacketTest() {
+    public void sendPacketTest() throws MalformedArtnetPacketException {
         //enable programming, disable dhcp, do not return all parameters to default
         //program IP Address, program Subnet Mask, program Port
         byte command = (byte) 0b10000111;

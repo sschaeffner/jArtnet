@@ -20,7 +20,6 @@ package me.sschaeffner.jArtnet.test;
 import me.sschaeffner.jArtnet.ArtnetController;
 import me.sschaeffner.jArtnet.ArtnetNode;
 import me.sschaeffner.jArtnet.ArtnetStyleCodes;
-import me.sschaeffner.jArtnet.packets.ArtIpProgPacket;
 import me.sschaeffner.jArtnet.packets.ArtIpProgReplyPacket;
 import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 import org.junit.After;
@@ -56,7 +55,7 @@ public class ArtIpProgReplyPacketTest {
         byte status = (byte) 0b01000000;
 
         ArtIpProgReplyPacket pOrig = new ArtIpProgReplyPacket(progIpHi, progIp2, progIp1, progIpLo, progSmHi, progSm2, progSm1, progSmLo, progPortHi, progPortLo, status);
-        byte[] bytes = pOrig.getPackageBytes();
+        byte[] bytes = pOrig.getPacketBytes();
 
         ArtIpProgReplyPacket p = ArtIpProgReplyPacket.fromBytes(bytes);
 
@@ -74,7 +73,7 @@ public class ArtIpProgReplyPacketTest {
     }
 
     @Test
-    public void sendPacketTest() {
+    public void sendPacketTest() throws MalformedArtnetPacketException {
         //enable programming, disable dhcp, do not return all parameters to default
         //program IP Address, program Subnet Mask, program Port
         byte progIpHi = (byte)192;

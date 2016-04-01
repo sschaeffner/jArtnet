@@ -60,12 +60,12 @@ public class ArtDmxPacket extends ArtnetPacket {
     }
 
     /**
-     * Returns the whole package's data as byte array.
+     * Returns the whole packets's data as byte array.
      *
-     * @return the package's data as byte array
+     * @return the packets's data as byte array
      */
     @Override
-    public byte[] getPackageBytes() throws MalformedArtnetPacketException {
+    public byte[] getPacketBytes() throws MalformedArtnetPacketException {
         int length = (this.lengthHi << 8) + this.length;
 
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1 + 1 + 1 + 1 + 1+1 + length;

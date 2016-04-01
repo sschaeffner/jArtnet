@@ -20,6 +20,7 @@ package me.sschaeffner.jArtnet;
 import me.sschaeffner.jArtnet.packets.ArtPollPacket;
 import me.sschaeffner.jArtnet.packets.ArtPollReplyPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
+import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 
 import java.io.IOException;
 import java.net.*;
@@ -111,6 +112,8 @@ public class ArtnetController {
                                 onPacketReceive(data, sender, port);
                             } catch (SocketException e) {
                                 //do nothing as the socket is just closed
+                            } catch (MalformedArtnetPacketException e) {
+                                e.printStackTrace();
                             }
                         }
                     }
@@ -128,7 +131,7 @@ public class ArtnetController {
     /**
      * Tries to discover nodes by sending an ArtPoll packet.
      */
-    public void discoverNodes() {
+    public void discoverNodes() throws MalformedArtnetPacketException {
         ArtPollPacket pollPacket = new ArtPollPacket();
         broadcastPacket(pollPacket);
 
@@ -141,7 +144,7 @@ public class ArtnetController {
      *
      * @return an ArtPollReplyPacket matching this controller
      */
-    private ArtPollReplyPacket constructArtPollReplyPacket() {
+    private ArtPollReplyPacket constructArtPollReplyPacket() throws MalformedArtnetPacketException {
         InetAddress address = broadcastAddress.getInterfaceAddress().getAddress();
         byte versInfoH = (byte) 0;
         byte versInfoL = (byte) 1;
@@ -187,12 +190,12 @@ public class ArtnetController {
      *
      * @param artnetPacket packet to send
      */
-    public void unicastPacket(ArtnetPacket artnetPacket, ArtnetNode node) {
+    public void unicastPacket(ArtnetPacket artnetPacket, ArtnetNode node) throws MalformedArtnetPacketException {
         if (socket != null) {
             InetAddress nodeAddress = node.getInetAddress();
             if (nodeAddress != null) {
 
-                byte[] data = artnetPacket.getPackageBytes();
+                byte[] data = artnetPacket.getPacketBytes();
                 DatagramPacket packet = new DatagramPacket(data, data.length, nodeAddress, ArtnetPacket.UDP_PORT);
                 try {
                     socket.send(packet);
@@ -208,10 +211,10 @@ public class ArtnetController {
      *
      * @param artnetPacket packet to send
      */
-    public void broadcastPacket(ArtnetPacket artnetPacket) {
+    public void broadcastPacket(ArtnetPacket artnetPacket) throws MalformedArtnetPacketException {
         if (socket != null) {
             if (broadcastAddress != null) {
-                byte[] data = artnetPacket.getPackageBytes();
+                byte[] data = artnetPacket.getPacketBytes();
                 DatagramPacket packet = new DatagramPacket(data, data.length, broadcastAddress.getBroadcastAddress(), ArtnetPacket.UDP_PORT);
                 try {
                     socket.send(packet);
@@ -270,7 +273,7 @@ public class ArtnetController {
      * @param sender    InetAddress of the packet's sender
      * @param port      packet sender's port
      */
-    private void onPacketReceive(byte[] bytes, InetAddress sender, int port) {
+    private void onPacketReceive(byte[] bytes, InetAddress sender, int port) throws MalformedArtnetPacketException {
 
         InetAddress localhost = null;
         try {

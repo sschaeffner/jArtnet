@@ -19,6 +19,7 @@ package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.packets.ArtPollPacket;
 import me.sschaeffner.jArtnet.ArtnetController;
+import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,9 +37,9 @@ public class ControllerTest {
     }
 
     @Test
-    public void test() {
+    public void packetSendTest() throws MalformedArtnetPacketException {
         ArtPollPacket pollPacket = new ArtPollPacket();
-        for (byte b : pollPacket.getPackageBytes()) System.out.print(Byte.toUnsignedInt(b) + " "); System.out.println();
+        for (byte b : pollPacket.getPacketBytes()) System.out.print(Byte.toUnsignedInt(b) + " "); System.out.println();
         controller.broadcastPacket(pollPacket);
         System.out.println("packet sent");
     }

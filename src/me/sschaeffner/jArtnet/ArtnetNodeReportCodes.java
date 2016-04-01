@@ -41,4 +41,37 @@ public class ArtnetNodeReportCodes {
     public static final int RC_DMX_SHORT = 0x000d;
     public static final int RC_FIRMWARE_FAIL = 0x000e;
     public static final int RC_USER_FAIL = 0x000f;
+
+    /**
+     * Converts a NodeReportCode integer into a byte array.
+     *
+     * @param nodeReportCode    NodeReportCode to convert
+     * @return                  converted NodeReportCode as byte array
+     */
+    public static byte[] toByteArray(int nodeReportCode) {
+        byte highByte = (byte)((nodeReportCode >>> 8) & 0xFF);
+        byte lowByte = (byte) (nodeReportCode & 0xFF);
+        return new byte[]{highByte, lowByte};
+    }
+
+    /**
+     * Converts a NodeReportCode integer into a ascii byte array.
+     *
+     * Puts high byte first, then low byte.
+     *
+     * @param nodeReportCode NodeReportCode to convert
+     * @return
+     */
+    public static byte[] toASCIIByteArray(int nodeReportCode) {
+        byte highByte1 = (byte)((nodeReportCode >>> 16) & 0xF);
+        byte highByte2 = (byte)((nodeReportCode >>>  8) & 0xF);
+        byte lowByte1 =  (byte)((nodeReportCode >>>  4) & 0xF);
+        byte lowByte2 =  (byte)((nodeReportCode       ) & 0xF);
+
+        byte ascii1 = (byte) (highByte1 + "").toCharArray()[0];
+        byte ascii2 = (byte) (highByte2 + "").toCharArray()[0];
+        byte ascii3 = (byte) (lowByte1  + "").toCharArray()[0];
+        byte ascii4 = (byte) (lowByte2  + "").toCharArray()[0];
+        return new byte[]{ascii1, ascii2, ascii3, ascii4};
+    }
 }

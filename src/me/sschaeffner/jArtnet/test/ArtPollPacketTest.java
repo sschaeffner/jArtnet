@@ -18,11 +18,16 @@
 package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.ArtNetPriorityCodes;
+import me.sschaeffner.jArtnet.ArtnetController;
+import me.sschaeffner.jArtnet.ArtnetNode;
+import me.sschaeffner.jArtnet.ArtnetStyleCodes;
 import me.sschaeffner.jArtnet.packets.ArtPollPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.net.InetAddress;
 
 /**
  * @author sschaeffner
@@ -30,19 +35,11 @@ import org.junit.Test;
 public class ArtPollPacketTest {
 
     @Test
-    public void test1() {
-        int protVerHi = Byte.toUnsignedInt(ArtPollPacket.protVerHi);
-        int protVerLo = Byte.toUnsignedInt(ArtPollPacket.protVerLo);
-        Assert.assertEquals(3, protVerHi);
-        Assert.assertEquals(14, protVerLo);
-    }
-
-    @Test
-    public void test2() {
+    public void constructionTest() {
         ArtPollPacket p = new ArtPollPacket();
-        byte[] b = p.getPackageBytes();
+        byte[] b = p.getPacketBytes();
 
-        //Art-Net package code
+        //Art-Net packet code
         for (int i = 0; i < ArtnetPacket.ID.length; i++) {
             Assert.assertEquals(ArtnetPacket.ID[i], b[i]);
         }
@@ -60,13 +57,13 @@ public class ArtPollPacketTest {
         Assert.assertEquals(6, b[12]);
 
         //priority (0xE0)
-        Assert.assertEquals(0xE0, b[13] & 0xFF);
+        Assert.assertEquals(ArtNetPriorityCodes.DP_LOW, b[13] & 0xFF);
     }
 
     @Test
-    public void test3() {
+    public void constructionTest2() {
         ArtPollPacket p = new ArtPollPacket((byte) 0, ArtNetPriorityCodes.DP_LOW);
-        byte[] b = p.getPackageBytes();
+        byte[] b = p.getPacketBytes();
 
         //Art-Net package code
         for (int i = 0; i < ArtnetPacket.ID.length; i++) {
@@ -90,13 +87,20 @@ public class ArtPollPacketTest {
     }
 
     @Test
-    public void test4() throws MalformedArtnetPacketException {
+    public void bytesFromPacketTest() throws MalformedArtnetPacketException {
         ArtPollPacket pOrig = new ArtPollPacket();
-        byte[] data = pOrig.getPackageBytes();
+        byte[] data = pOrig.getPacketBytes();
         ArtPollPacket p = ArtPollPacket.fromBytes(data);
 
         Assert.assertNotNull(p);
         Assert.assertEquals(pOrig.getTalkToMe(), p.getTalkToMe());
         Assert.assertEquals(pOrig.getPriority(), p.getPriority());
+    }
+
+    @Test
+    public void sendPacketTest() throws MalformedArtnetPacketException {
+        ArtPollPacket p = new ArtPollPacket();
+        ArtnetController controller = new ArtnetController(false, false);
+        controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 }

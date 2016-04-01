@@ -17,12 +17,17 @@
  */
 package me.sschaeffner.jArtnet.test;
 
+import me.sschaeffner.jArtnet.ArtnetController;
+import me.sschaeffner.jArtnet.ArtnetNode;
+import me.sschaeffner.jArtnet.ArtnetStyleCodes;
 import me.sschaeffner.jArtnet.packets.ArtDmxPacket;
 import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.net.InetAddress;
 
 /**
  * @author sschaeffner
@@ -36,19 +41,13 @@ public class ArtDmxPacketTest {
 
     @Test
     public void constructionTest() throws MalformedArtnetPacketException {
-
         byte[] data = new byte[512];
         for (int i = 0; i < 512; i++) {
             data[i] = (byte) (i % 256);
-            String s = Byte.toUnsignedInt(data[i]) + "";
-            for (int ii = s.length(); ii <= 3; ii++) s = " " + s;
-            System.out.print(s + " ");
-            if (i % 16 == 15) System.out.println();
         }
-        System.out.println();
 
         ArtDmxPacket pOrig = new ArtDmxPacket((byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0x02, (byte) 0x00, data);
-        byte[] bytes = pOrig.getPackageBytes();
+        byte[] bytes = pOrig.getPacketBytes();
         ArtDmxPacket p = ArtDmxPacket.fromBytes(bytes);
 
         Assert.assertEquals(pOrig.getSequence(), p.getSequence());
@@ -68,8 +67,18 @@ public class ArtDmxPacketTest {
     }
 
     @Test
-    public void sendPacketTest() {
-        
+    public void sendPacketTest() throws MalformedArtnetPacketException {
+        byte[] data = new byte[512];
+        for (int i = 0; i < 512; i++) {
+            data[i] = (byte) (i % 256);
+        }
+
+        ArtDmxPacket pOrig = new ArtDmxPacket((byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0x02, (byte) 0x00, data);
+        byte[] bytes = pOrig.getPacketBytes();
+        ArtDmxPacket p = ArtDmxPacket.fromBytes(bytes);
+
+        ArtnetController controller = new ArtnetController(false, false);
+        controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 
     @After

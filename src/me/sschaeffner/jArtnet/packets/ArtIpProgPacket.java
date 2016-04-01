@@ -60,7 +60,7 @@ public class ArtIpProgPacket extends ArtnetPacket {
 
 
     @Override
-    public byte[] getPackageBytes() {
+    public byte[] getPacketBytes() {
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1+1 + 1 + 1 + 4 + 4 + 2 + 8;
         byte[] bytes = new byte[byteArrayLength];
 

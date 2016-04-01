@@ -22,6 +22,7 @@ import me.sschaeffner.jArtnet.ArtnetController;
 import me.sschaeffner.jArtnet.ArtnetPacketListener;
 import me.sschaeffner.jArtnet.packets.ArtDmxPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
+import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +32,7 @@ import java.io.InputStreamReader;
  * @author sschaeffner
  */
 public class DmxProManagerTest implements ArtnetPacketListener {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedArtnetPacketException {
         DmxProManagerTest t = new DmxProManagerTest();
         t.sendData();
         t.controller.discoverNodes();
@@ -58,7 +59,7 @@ public class DmxProManagerTest implements ArtnetPacketListener {
     }
 
 
-    public void sendData() {
+    public void sendData() throws MalformedArtnetPacketException {
         byte sequence = 0;
         byte physical = 0;
         byte subUni = 0;
@@ -70,7 +71,7 @@ public class DmxProManagerTest implements ArtnetPacketListener {
         System.out.println("ArtDmx packet send");
     }
 
-    public void in() throws IOException {
+    public void in() throws IOException, MalformedArtnetPacketException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String in;
         System.out.print("r: ");
@@ -87,7 +88,7 @@ public class DmxProManagerTest implements ArtnetPacketListener {
         }
     }
 
-    public void fade() {
+    public void fade() throws MalformedArtnetPacketException {
         int rM = 1;
         int gM = 0;
         int bM = 0;

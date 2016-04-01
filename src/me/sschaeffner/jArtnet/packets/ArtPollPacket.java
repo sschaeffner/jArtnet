@@ -45,7 +45,7 @@ public class ArtPollPacket extends ArtnetPacket {
      *      * critical
      */
     public ArtPollPacket() {
-        this((byte) 0b00000110, ArtNetPriorityCodes.DP_CRITICAL);
+        this((byte) 0b00000110, ArtNetPriorityCodes.DP_LOW);
     }
 
     /**
@@ -60,12 +60,12 @@ public class ArtPollPacket extends ArtnetPacket {
     }
 
     /**
-     * Returns the whole package's data as byte array.
+     * Returns the whole packet's data as byte array.
      *
-     * @return the package's data as byte array
+     * @return the packet's data as byte array
      */
     @Override
-    public byte[] getPackageBytes() {
+    public byte[] getPacketBytes() {
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1 + 1;
         byte[] bytes = new byte[byteArrayLength];
 

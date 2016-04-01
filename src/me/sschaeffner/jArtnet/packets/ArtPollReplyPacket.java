@@ -104,12 +104,12 @@ public class ArtPollReplyPacket extends ArtnetPacket {
     }
 
     /**
-     * Returns the whole package's data as byte array.
+     * Returns the whole packet's data as byte array.
      *
-     * @return the package's data as byte array
+     * @return the packet's data as byte array
      */
     @Override
-    public byte[] getPackageBytes() {
+    public byte[] getPacketBytes() {
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 4 + 2 + 2 + 1+1 + 1+1 + 1 + 1 + 1+1 + 18 + 64 + 64 + 1+1 + 4 + 4+4 + 4+4 + 1 + 1 + 1 + 3 + 1 + 6 + 4 + 1 + 1 + 26;
         byte[] bytes = new byte[byteArrayLength];
 

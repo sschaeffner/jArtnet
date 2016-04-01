@@ -47,7 +47,7 @@ public class ArtDiagDataPacketTest {
         byte lengthLo = (byte) data.length;
 
         ArtDiagDataPacket pOrig = new ArtDiagDataPacket(priority, lengthHi, lengthLo, data);
-        byte[] bytes = pOrig.getPackageBytes();
+        byte[] bytes = pOrig.getPacketBytes();
 
         ArtDiagDataPacket p = ArtDiagDataPacket.fromBytes(bytes);
         Assert.assertEquals(pOrig.getPriority(), p.getPriority());
@@ -55,11 +55,10 @@ public class ArtDiagDataPacketTest {
         Assert.assertEquals(pOrig.getLengthLo(), p.getLengthLo());
         Assert.assertArrayEquals(pOrig.getData(), p.getData());
         Assert.assertEquals(pOrig.getMessageAsString(), p.getMessageAsString());
-        System.out.println(p.getMessageAsString());
     }
 
     @Test
-    public void sendPacketTest() {
+    public void sendPacketTest() throws MalformedArtnetPacketException {
         ArtDiagDataPacket p = new ArtDiagDataPacket(ArtNetPriorityCodes.DP_CRITICAL, "hello world");
         ArtnetController controller = new ArtnetController(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));

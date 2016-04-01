@@ -43,9 +43,9 @@ public abstract class ArtnetPacket {
     }
 
     /**
-     * Returns the whole package's data as byte array.
+     * Returns the whole packet's data as byte array.
      *
-     * @return the package's data as byte array
+     * @return the packet's data as byte array
      */
-    public abstract byte[] getPackageBytes() throws MalformedArtnetPacketException;
+    public abstract byte[] getPacketBytes() throws MalformedArtnetPacketException;
 }
