@@ -17,11 +17,9 @@
  */
 package me.sschaeffner.jArtnet.test;
 
-import me.sschaeffner.jArtnet.ArtnetController;
-import me.sschaeffner.jArtnet.ArtnetNode;
-import me.sschaeffner.jArtnet.ArtnetStyleCodes;
+import me.sschaeffner.jArtnet.*;
 import me.sschaeffner.jArtnet.packets.ArtIpProgPacket;
-import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
+import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -76,6 +74,25 @@ public class ArtIpProgPacketTest {
 
         ArtnetController controller = new ArtnetController(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
+    }
+
+    @Test
+    public void opCodeRecognitionTest() throws MalformedArtnetPacketException {
+        byte command = (byte) 0b10000111;
+        byte[] progIp = new byte[]{(byte)192, (byte)168, (byte)0, (byte)10};
+        byte[] progSm = new byte[]{(byte)255, (byte)255, (byte)0, (byte)0};
+
+        byte progPortHi = (byte) 0x19;
+        byte progPortLo = (byte) 0x36;
+
+        ArtIpProgPacket pOrig = new ArtIpProgPacket(command, progIp, progSm, progPortHi, progPortLo);
+        byte[] bytes = pOrig.getPacketBytes();
+
+        ArtnetPacket p = ArtnetOpCodes.fromBytes(bytes);
+
+        if (!(p instanceof ArtIpProgPacket)) {
+            Assert.fail("ArtIpProgPacket not recognized by ArtnetOpCodes");
+        }
     }
 
     @After

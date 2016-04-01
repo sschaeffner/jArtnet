@@ -17,12 +17,9 @@
  */
 package me.sschaeffner.jArtnet.test;
 
-import me.sschaeffner.jArtnet.ArtNetPriorityCodes;
-import me.sschaeffner.jArtnet.ArtnetController;
-import me.sschaeffner.jArtnet.ArtnetNode;
-import me.sschaeffner.jArtnet.ArtnetStyleCodes;
+import me.sschaeffner.jArtnet.*;
 import me.sschaeffner.jArtnet.packets.ArtDiagDataPacket;
-import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
+import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -62,6 +59,22 @@ public class ArtDiagDataPacketTest {
         ArtDiagDataPacket p = new ArtDiagDataPacket(ArtNetPriorityCodes.DP_CRITICAL, "hello world");
         ArtnetController controller = new ArtnetController(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
+    }
+
+    @Test
+    public void opCodeRecognitionTest() throws MalformedArtnetPacketException {
+        byte priority = ArtNetPriorityCodes.DP_CRITICAL;
+        byte[] data = ArtDiagDataPacket.stringToAsciiArrayNullTerminated("Important Message");
+        byte lengthHi = (byte) (data.length >> 8);
+        byte lengthLo = (byte) data.length;
+
+        ArtDiagDataPacket pOrig = new ArtDiagDataPacket(priority, lengthHi, lengthLo, data);
+        byte[] bytes = pOrig.getPacketBytes();
+        ArtnetPacket p = ArtnetOpCodes.fromBytes(bytes);
+
+        if (!(p instanceof ArtDiagDataPacket)) {
+            Assert.fail("ArtDiagDataPacket not recognized by ArtnetOpCodes");
+        }
     }
 
     @After

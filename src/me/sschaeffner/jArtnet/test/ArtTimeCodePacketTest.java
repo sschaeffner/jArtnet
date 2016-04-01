@@ -17,11 +17,9 @@
  */
 package me.sschaeffner.jArtnet.test;
 
-import me.sschaeffner.jArtnet.ArtnetController;
-import me.sschaeffner.jArtnet.ArtnetNode;
-import me.sschaeffner.jArtnet.ArtnetStyleCodes;
-import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
+import me.sschaeffner.jArtnet.*;
 import me.sschaeffner.jArtnet.packets.ArtTimeCodePacket;
+import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -69,6 +67,23 @@ public class ArtTimeCodePacketTest {
         ArtTimeCodePacket p = new ArtTimeCodePacket(frames, seconds, minutes, hours, type);
         ArtnetController controller = new ArtnetController(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
+    }
+
+    @Test
+    public void opCodeRecognitionTest() throws MalformedArtnetPacketException {
+        byte frames = 1;
+        byte seconds = 2;
+        byte minutes = 3;
+        byte hours = 4;
+        byte type = (byte)0b0010;
+
+        ArtTimeCodePacket pOrig = new ArtTimeCodePacket(frames, seconds, minutes, hours, type);
+        byte[] bytes = pOrig.getPacketBytes();
+
+        ArtnetPacket p = ArtnetOpCodes.fromBytes(bytes);
+        if (!(p instanceof ArtTimeCodePacket)) {
+            Assert.fail("ArtTimeCodePacket not recognized by ArtnetOpCodes");
+        }
     }
 
     @After

@@ -17,12 +17,9 @@
  */
 package me.sschaeffner.jArtnet.test;
 
-import me.sschaeffner.jArtnet.ArtnetController;
-import me.sschaeffner.jArtnet.ArtnetNode;
-import me.sschaeffner.jArtnet.ArtnetNodeReportCodes;
-import me.sschaeffner.jArtnet.ArtnetStyleCodes;
+import me.sschaeffner.jArtnet.*;
 import me.sschaeffner.jArtnet.packets.ArtPollReplyPacket;
-import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
+import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -198,5 +195,67 @@ public class ArtPollReplyPacketTest {
                 mac, bindIp, bindIndex, status2);
         ArtnetController controller = new ArtnetController(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
+    }
+
+    @Test
+    public void opCodeRecognitionTest() throws MalformedArtnetPacketException {
+        InetAddress address = InetAddress.getLoopbackAddress();
+        byte versInfoH = (byte)0x1;
+        byte versInfoL = (byte)0x2;
+        byte netSwitch = (byte)0x1;
+        byte subSwitch = (byte)0x2;
+        byte oemHi = (byte)0x0;
+        byte oem = (byte)0xff;
+        byte ubeaVersion = (byte)0x0;
+        byte status1 = (byte)0b11010000;
+        byte estaManLo = (byte) 0xff;
+        byte estaManHi = (byte) 0x00;
+        byte[] shortName = new byte[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', (byte)0x0};//j = 10
+        byte[] longName = new byte[64];
+        for (int i = 'a'; i < 'z'; i++) longName[i - 0x61] = (byte) i;
+
+        byte[] nodeReport = new byte[64];
+        nodeReport[0] = '#';
+        byte[] reportCodeAscii = ArtnetNodeReportCodes.toASCIIByteArray(ArtnetNodeReportCodes.RC_DEBUG);
+        nodeReport[1] = reportCodeAscii[0];
+        nodeReport[2] = reportCodeAscii[1];
+        nodeReport[3] = reportCodeAscii[2];
+        nodeReport[4] = reportCodeAscii[3];
+        nodeReport[5] = ' ';
+        nodeReport[6] = '0';
+        nodeReport[7] = ' ';
+        nodeReport[8] = 's';
+        nodeReport[9] = 't';
+        nodeReport[10] = 'a';
+        nodeReport[11] = 't';
+        nodeReport[12] = 'u';
+        nodeReport[13] = 's';
+
+        byte numPortsHi = 0x0;
+        byte numPortsLo = 4;
+        byte[] portTypes = new byte[]{(byte) 0, (byte) 0, (byte) 5, (byte) 5};
+        byte[] goodInput = new byte[]{(byte) 0x80, (byte) 0x80, (byte) 0x80, (byte) 0x80};
+        byte[] goodOutput = new byte[]{(byte) 0x80, (byte) 0x80, (byte) 0x80, (byte) 0x80};
+        byte[] swIn = new byte[]{(byte) 0x1, (byte) 0x2, (byte) 0x3, (byte) 0x4};
+        byte[] swOut = new byte[]{(byte) 0x1, (byte) 0x2, (byte) 0x3, (byte) 0x4};
+        byte swVideo = 0x0;
+        byte swMacro = 0x0;
+        byte swRemote = 0x0;
+        byte style = ArtnetStyleCodes.ST_CONTROLLER;
+        byte[] mac = new byte[]{(byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff};
+        byte[] bindIp = InetAddress.getLoopbackAddress().getAddress();
+        byte bindIndex = 1;
+        byte status2 = (byte)0b1100;
+
+        ArtPollReplyPacket pOrig = new ArtPollReplyPacket(address, versInfoH, versInfoL, netSwitch, subSwitch, oemHi,
+                oem, ubeaVersion, status1, estaManLo, estaManHi, shortName, longName, nodeReport, numPortsHi,
+                numPortsLo, portTypes, goodInput, goodOutput, swIn, swOut, swVideo, swMacro, swRemote, style,
+                mac, bindIp, bindIndex, status2);
+        byte[] bytes = pOrig.getPacketBytes();
+
+        ArtnetPacket p = ArtnetOpCodes.fromBytes(bytes);
+        if (!(p instanceof ArtPollReplyPacket)) {
+            Assert.fail("ArtPollReplyPacket not recognized by ArtnetOpCodes");
+        }
     }
 }

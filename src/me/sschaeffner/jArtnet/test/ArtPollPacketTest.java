@@ -17,13 +17,9 @@
  */
 package me.sschaeffner.jArtnet.test;
 
-import me.sschaeffner.jArtnet.ArtNetPriorityCodes;
-import me.sschaeffner.jArtnet.ArtnetController;
-import me.sschaeffner.jArtnet.ArtnetNode;
-import me.sschaeffner.jArtnet.ArtnetStyleCodes;
+import me.sschaeffner.jArtnet.*;
 import me.sschaeffner.jArtnet.packets.ArtPollPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
-import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -102,5 +98,16 @@ public class ArtPollPacketTest {
         ArtPollPacket p = new ArtPollPacket();
         ArtnetController controller = new ArtnetController(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
+    }
+
+    @Test
+    public void opCodeRecognitionTest() throws MalformedArtnetPacketException {
+        ArtPollPacket pOrig = new ArtPollPacket();
+        byte[] bytes = pOrig.getPacketBytes();
+
+        ArtnetPacket p = ArtnetOpCodes.fromBytes(bytes);
+        if (!(p instanceof ArtPollPacket)) {
+            Assert.fail("ArtPollPacket not recognized by ArtnetOpCodes");
+        }
     }
 }

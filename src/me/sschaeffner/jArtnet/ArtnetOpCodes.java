@@ -98,8 +98,8 @@ public final class ArtnetOpCodes {
             if(Arrays.equals(packetId, ArtnetPacket.ID)) {
 
                 //check opcode
-                byte opCodeLo = bytes[8];
-                byte opCodeHi = bytes[9];
+                int opCodeLo = Byte.toUnsignedInt(bytes[8]);
+                int opCodeHi = Byte.toUnsignedInt(bytes[9]);
 
                 int opCode = (opCodeHi << 8) + opCodeLo;
 
@@ -119,18 +119,23 @@ public final class ArtnetOpCodes {
                     case ArtnetOpCodes.OP_DIAG_DATA:
                         System.out.println("OP_DIAG_DATA");
                         return ArtDiagDataPacket.fromBytes(bytes);
+
                     case ArtnetOpCodes.OP_IP_PROG:
                         System.out.println("OP_IP_PROG");
                         return ArtIpProgPacket.fromBytes(bytes);
+
                     case ArtnetOpCodes.OP_IP_PROG_REPLY:
                         System.out.println("OP_IP_PROG_REPLY");
                         return ArtIpProgReplyPacket.fromBytes(bytes);
+
                     case ArtnetOpCodes.OP_SYNC:
                         System.out.println("OP_SYNC");
                         return ArtSyncPacket.fromBytes(bytes);
+
                     case ArtnetOpCodes.OP_TIME_CODE:
                         System.out.println("OP_TIME_CODE");
                         return ArtTimeCodePacket.fromBytes(bytes);
+
                     default:
                         System.out.println("unimplemented artnet packet: (opcode=" + opCode + ")");
                         break;
