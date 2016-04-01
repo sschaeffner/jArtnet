@@ -8,6 +8,7 @@ Packets currently implemented:
 * ArtPollReply
 * ArtDmx
 * ArtDiagData
+* ArtIpProg
 
 Currently tested with:
 
