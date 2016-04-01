@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.sschaeffner.jArtnet.packets;
+package me.sschaeffner.jArtnet;
 
 /**
  * @author sschaeffner

@@ -22,7 +22,7 @@ import me.sschaeffner.jArtnet.ArtnetController;
 import me.sschaeffner.jArtnet.ArtnetPacketListener;
 import me.sschaeffner.jArtnet.packets.ArtDmxPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
-import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
+import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -21,7 +21,7 @@ import me.sschaeffner.jArtnet.ArtnetController;
 import me.sschaeffner.jArtnet.ArtnetNode;
 import me.sschaeffner.jArtnet.ArtnetStyleCodes;
 import me.sschaeffner.jArtnet.packets.ArtIpProgReplyPacket;
-import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
+import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

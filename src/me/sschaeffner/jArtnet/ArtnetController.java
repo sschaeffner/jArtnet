@@ -20,7 +20,6 @@ package me.sschaeffner.jArtnet;
 import me.sschaeffner.jArtnet.packets.ArtPollPacket;
 import me.sschaeffner.jArtnet.packets.ArtPollReplyPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
-import me.sschaeffner.jArtnet.packets.MalformedArtnetPacketException;
 
 import java.io.IOException;
 import java.net.*;

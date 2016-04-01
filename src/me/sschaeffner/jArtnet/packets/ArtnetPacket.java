@@ -18,6 +18,7 @@
 package me.sschaeffner.jArtnet.packets;
 
 import me.sschaeffner.jArtnet.ArtnetNode;
+import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
  * This is an Art-Net Packet.

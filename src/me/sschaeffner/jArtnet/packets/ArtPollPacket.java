@@ -20,6 +20,7 @@ package me.sschaeffner.jArtnet.packets;
 
 import me.sschaeffner.jArtnet.ArtNetPriorityCodes;
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
+import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
  * An ArtPoll packet.

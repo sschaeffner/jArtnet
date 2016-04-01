@@ -18,6 +18,7 @@
 package me.sschaeffner.jArtnet.packets;
 
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
+import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
