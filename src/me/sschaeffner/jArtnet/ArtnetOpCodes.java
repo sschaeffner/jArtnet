@@ -136,6 +136,10 @@ public final class ArtnetOpCodes {
                         System.out.println("OP_TIME_CODE");
                         return ArtTimeCodePacket.fromBytes(bytes);
 
+                    case ArtnetOpCodes.OP_COMMAND:
+                        System.out.println("OP_COMMAND");
+                        return ArtCommandPacket.fromBytes(bytes);
+
                     default:
                         System.out.println("unimplemented artnet packet: (opcode=" + opCode + ")");
                         break;

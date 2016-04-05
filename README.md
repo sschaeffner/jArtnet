@@ -12,6 +12,7 @@ Packets currently implemented:
 * ArtIpProgReply
 * ArtSync
 * ArtTimeCode
+* ArtCommand
 
 Currently tested with:
 
