@@ -140,6 +140,10 @@ public final class ArtnetOpCodes {
                         System.out.println("OP_COMMAND");
                         return ArtCommandPacket.fromBytes(bytes);
 
+                    case ArtnetOpCodes.OP_TRIGGER:
+                        System.out.println("OP_TRIGGER");
+                        return ArtTriggerPacket.fromBytes(bytes);
+
                     default:
                         System.out.println("unimplemented artnet packet: (opcode=" + opCode + ")");
                         break;

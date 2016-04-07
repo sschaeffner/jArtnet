@@ -13,6 +13,7 @@ Packets currently implemented:
 * ArtSync
 * ArtTimeCode
 * ArtCommand
+* ArtTrigger
 
 Currently tested with:
 
