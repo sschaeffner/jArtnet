@@ -20,3 +20,8 @@ Packets currently implemented:
 Currently tested with:
 
 * ENTTEC PRO-Manager Art-Net Recorder
+
+Not supported:
+
+* Firmware upgrades over Art-Net (ArtFirmwareMaster, ArtFirmwareReply, UBEA file upload)
+* RDM (ArtTodRequest, ArtTodData, ArtTodControl, ArtRdm, ArtRdmSub)
