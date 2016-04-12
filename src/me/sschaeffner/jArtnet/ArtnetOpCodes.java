@@ -148,6 +148,10 @@ public final class ArtnetOpCodes {
                         System.out.println("OP_NZS");
                         return ArtNzsPacket.fromBytes(bytes);
 
+                    case ArtnetOpCodes.OP_INPUT:
+                        System.out.println("OP_INPUT");
+                        return ArtInputPacket.fromBytes(bytes);
+
                     default:
                         System.out.println("unimplemented artnet packet: (opcode=" + opCode + ")");
                         break;
