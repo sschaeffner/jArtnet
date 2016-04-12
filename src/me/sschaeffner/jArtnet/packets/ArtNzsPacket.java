@@ -33,7 +33,7 @@ public class ArtNzsPacket extends ArtnetPacket {
     private final byte length;
     private final byte[] data;
 
-    public ArtNzsPacket(byte sequence, byte startCode, byte subUni, byte net, byte lengthHi, byte length, byte[] data) {
+    public ArtNzsPacket(byte sequence, byte startCode, byte subUni, byte net, byte lengthHi, byte length, byte[] data) throws MalformedArtnetPacketException {
         this.sequence = sequence;
         this.startCode = startCode;
         this.subUni = subUni;
@@ -41,9 +41,12 @@ public class ArtNzsPacket extends ArtnetPacket {
         this.lengthHi = lengthHi;
         this.length = length;
         this.data = data;
+        if (data.length > 512) {
+            throw new MalformedArtnetPacketException("Cannot construct ArtDmxPacket: data too long");
+        }
     }
 
-    public ArtNzsPacket(byte sequence, byte startCode, byte subUni, byte net, byte[] data) {
+    public ArtNzsPacket(byte sequence, byte startCode, byte subUni, byte net, byte[] data) throws MalformedArtnetPacketException {
         this.sequence = sequence;
         this.startCode = startCode;
         this.subUni = subUni;
@@ -51,6 +54,9 @@ public class ArtNzsPacket extends ArtnetPacket {
         this.lengthHi = (byte) (data.length >> 8);
         this.length = (byte) data.length;
         this.data = data;
+        if (data.length > 512) {
+            throw new MalformedArtnetPacketException("Cannot construct ArtDmxPacket: data too long");
+        }
     }
 
     @Override
