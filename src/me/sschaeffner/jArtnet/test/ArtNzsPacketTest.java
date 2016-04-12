@@ -62,6 +62,27 @@ public class ArtNzsPacketTest {
     }
 
     @Test
+    public void constructionTest2() throws MalformedArtnetPacketException {
+        byte sequence = (byte) 0x10;
+        byte startCode = (byte) 0x01;
+        byte subUni = (byte) 0x02;
+        byte net = (byte) 0x03;
+        byte[] data = new byte[]{(byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05};
+
+        ArtNzsPacket pOrig = new ArtNzsPacket(sequence, startCode, subUni, net, data);
+        byte[] bytes = pOrig.getPacketBytes();
+        ArtNzsPacket p = ArtNzsPacket.fromBytes(bytes);
+
+        Assert.assertEquals(sequence, p.getSequence());
+        Assert.assertEquals(startCode, p.getStartCode());
+        Assert.assertEquals(subUni, p.getSubUni());
+        Assert.assertEquals(net, p.getNet());
+        Assert.assertEquals(0, p.getLengthHi());
+        Assert.assertEquals(5, p.getLength());
+        Assert.assertArrayEquals(data, p.getData());
+    }
+
+    @Test
     public void sendPacketTest() throws MalformedArtnetPacketException {
         byte sequence = (byte) 0x10;
         byte startCode = (byte) 0x01;

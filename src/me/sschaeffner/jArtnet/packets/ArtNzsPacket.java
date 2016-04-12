@@ -43,6 +43,16 @@ public class ArtNzsPacket extends ArtnetPacket {
         this.data = data;
     }
 
+    public ArtNzsPacket(byte sequence, byte startCode, byte subUni, byte net, byte[] data) {
+        this.sequence = sequence;
+        this.startCode = startCode;
+        this.subUni = subUni;
+        this.net = net;
+        this.lengthHi = (byte) (data.length >> 8);
+        this.length = (byte) data.length;
+        this.data = data;
+    }
+
     @Override
     public byte[] getPacketBytes() throws MalformedArtnetPacketException {
         int length = (this.lengthHi << 8) + this.length;
