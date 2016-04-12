@@ -14,6 +14,7 @@ Packets currently implemented:
 * ArtTimeCode
 * ArtCommand
 * ArtTrigger
+* ArtNzs
 
 Currently tested with:
 

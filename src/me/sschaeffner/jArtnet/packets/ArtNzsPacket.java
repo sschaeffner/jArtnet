@@ -23,51 +23,26 @@ import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 /**
  * @author sschaeffner
  */
-public class ArtDmxPacket extends ArtnetPacket {
+public class ArtNzsPacket extends ArtnetPacket {
 
     private final byte sequence;
-    private final byte physical;
-    private final byte subUni, net;
-    private final byte lengthHi, length;
+    private final byte startCode;
+    private final byte subUni;
+    private final byte net;
+    private final byte lengthHi;
+    private final byte length;
     private final byte[] data;
 
-    /**
-     * Constructs a new instance of this class.
-     */
-    public ArtDmxPacket(byte sequence, byte physical, byte subUni, byte net, byte lengthHi, byte length, byte[] data) throws MalformedArtnetPacketException {
+    public ArtNzsPacket(byte sequence, byte startCode, byte subUni, byte net, byte lengthHi, byte length, byte[] data) {
         this.sequence = sequence;
-        this.physical = physical;
+        this.startCode = startCode;
         this.subUni = subUni;
         this.net = net;
         this.lengthHi = lengthHi;
         this.length = length;
-
-        if (data.length > 512) throw new MalformedArtnetPacketException("Cannot construct ArtDmxPacket: data too long");
         this.data = data;
     }
 
-    /**
-     * Constructs a new instance of this class.
-     */
-    public ArtDmxPacket(byte sequence, byte physical, byte subUni, byte net, byte[] data) throws MalformedArtnetPacketException {
-        this.sequence = sequence;
-        this.physical = physical;
-        this.subUni = subUni;
-        this.net = net;
-        int length = data.length;
-        this.lengthHi = (byte)((length >>> 8) & 0xFF);
-        this.length = (byte)(length & 0xFF);
-        this.data = data;
-        if (data.length > 512) {
-            throw new MalformedArtnetPacketException("Cannot construct ArtDmxPacket: data too long");
-        }
-    }
-
-    /**
-     * Returns the whole packets's data as byte array.
-     *
-     * @return the packets's data as byte array
-     */
     @Override
     public byte[] getPacketBytes() throws MalformedArtnetPacketException {
         int length = (this.lengthHi << 8) + this.length;
@@ -79,84 +54,81 @@ public class ArtDmxPacket extends ArtnetPacket {
         System.arraycopy(ArtnetPacket.ID, 0, bytes, 0, ArtnetPacket.ID.length);
 
         //opcode
-        byte[] opCode = ArtnetOpCodes.toByteArray(ArtnetOpCodes.OP_OUTPUT);
+        byte[] opCode = ArtnetOpCodes.toByteArray(ArtnetOpCodes.OP_NZS);
         System.arraycopy(opCode, 0, bytes, ArtnetPacket.ID.length, 2);
 
         bytes[10] = protVerHi;
         bytes[11] = protVerLo;
 
         bytes[12] = this.sequence;
-
-        bytes[13] = this.physical;
-
+        bytes[13] = this.startCode;
         bytes[14] = this.subUni;
         bytes[15] = this.net;
-
         bytes[16] = this.lengthHi;
         bytes[17] = this.length;
 
         if (bytes.length >= length + 18) {
             System.arraycopy(data, 0, bytes, 18, length);
         } else {
-            throw new MalformedArtnetPacketException("cannot get packet bytes for ArtDmxPacket: not enough data for length available");
+            throw new MalformedArtnetPacketException("cannot get packet bytes for ArtNzsPacket: not enough data for length available");
         }
 
         return bytes;
     }
 
-    public static ArtDmxPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
+    public static ArtNzsPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
         //check for minimum length
-        int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1 + 1 + 1 + 1 + 1+1 + 1;
+        int byteArrayLength = ArtnetPacket.ID.length + 2 + 1 + 1 + 1 + 1 + 1+1 + 1;
         if (bytes.length < byteArrayLength) {
-            throw new MalformedArtnetPacketException("cannot construct ArtDmxPacket from bytes: bytes length not compatible");
+            throw new MalformedArtnetPacketException("cannot construct ArtNzsPacket from bytes: bytes length not compatible");
         }
 
         //check for correct opcode
-        byte[] opCode = ArtnetOpCodes.toByteArray(ArtnetOpCodes.OP_OUTPUT);
+        byte[] opCode = ArtnetOpCodes.toByteArray(ArtnetOpCodes.OP_NZS);
 
         byte rOpCodeLo = bytes[8];
         byte rOpCodeHi = bytes[9];
         if (rOpCodeLo != opCode[0] || rOpCodeHi != opCode[1]) {
-            throw new MalformedArtnetPacketException("cannot construct ArtDmxPacket from data: wrong opcode");
+            throw new MalformedArtnetPacketException("cannot construct ArtNzsPacket from data: wrong opcode");
         }
 
         //check protocol version
         byte rProtVerHi = bytes[10];
         byte rProtVerLo = bytes[11];
         if (rProtVerHi < protVerHi || rProtVerLo < protVerLo) {
-            throw new MalformedArtnetPacketException("cannot construct ArtDmxPacket from data: protVer not compatible");
+            throw new MalformedArtnetPacketException("cannot construct ArtNzsPacket from data: protVer not compatible");
         }
 
         //read information
-        byte sequence = bytes[12];
+        byte rSequence = bytes[12];
 
-        byte physical = bytes[13];
+        byte rStartCode = bytes[13];
 
-        byte subUni = bytes[14];
-        byte net = bytes[15];
+        byte rSubUni = bytes[14];
+        byte rNet = bytes[15];
 
-        byte lengthHi = bytes[16];
-        byte length = bytes[17];
+        byte rLengthHi = bytes[16];
+        byte rLength = bytes[17];
 
-        int lengthI = (lengthHi << 8) + length;
+        int lengthI = (rLengthHi << 8) + rLength;
 
         byte[] data = new byte[lengthI];
         if (bytes.length >= lengthI + 18) {
             System.arraycopy(bytes, 18, data, 0, lengthI);
         } else {
-            throw new MalformedArtnetPacketException("cannot construct ArtDmxPacket from bytes: data too short (is " + (bytes.length - 18)
+            throw new MalformedArtnetPacketException("cannot construct ArtNzsPacket from bytes: data too short (is " + (bytes.length - 18)
                     + "; should be " + lengthI + ")");
         }
 
-        return new ArtDmxPacket(sequence, physical, subUni, net, lengthHi, length, data);
+        return new ArtNzsPacket(rSequence, rStartCode, rSubUni, rNet, rLengthHi, rLength, data);
     }
 
     public byte getSequence() {
         return sequence;
     }
 
-    public byte getPhysical() {
-        return physical;
+    public byte getStartCode() {
+        return startCode;
     }
 
     public byte getSubUni() {
