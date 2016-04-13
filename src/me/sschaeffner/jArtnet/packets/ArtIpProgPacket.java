@@ -21,6 +21,8 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
+ * An implementation of the ArtIpProg packet as defined by the Art-Net standard.
+ *
  * @author sschaeffner
  */
 public class ArtIpProgPacket extends ArtnetPacket {
@@ -34,6 +36,13 @@ public class ArtIpProgPacket extends ArtnetPacket {
 
     /**
      * Constructs a new instance of this class.
+     *
+     * @param command       actions of this packet
+     * @param progIp        IP address to be programmed into the node if enabled by command
+     * @param progSm        subnet mask to be programmed into the node if enabled by command
+     * @param progPortHi    high byte of the port to be programmed into the node if enabled by command
+     * @param progPortLo    low byte of the port to be programmed into the node if enabled by command
+     * @throws MalformedArtnetPacketException
      */
     public ArtIpProgPacket(byte command, byte[] progIp, byte[] progSm, byte progPortHi, byte progPortLo) throws MalformedArtnetPacketException {
         this.command = command;

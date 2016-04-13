@@ -21,14 +21,24 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
+ * An implementation of the ArtInput packet as defined by the Art-Net standard.
+ *
  * @author sschaeffner
  */
 public class ArtInputPacket extends ArtnetPacket {
 
-    byte numPortsHi;//for future expansion, currently zero
-    byte numPortsLo;
-    byte[] input;
+    private final byte numPortsHi;//for future expansion, currently zero
+    private final byte numPortsLo;
+    private final byte[] input;
 
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param numPortsHi high byte of the word describing the number of in-/output ports of the node
+     * @param numPortsLo low byte of the word describing the number of in-/output ports of the node
+     * @param input      array defining the disable status of each input
+     * @throws MalformedArtnetPacketException
+     */
     public ArtInputPacket(byte numPortsHi, byte numPortsLo, byte[] input) throws MalformedArtnetPacketException {
         this.numPortsHi = numPortsHi;
         this.numPortsLo = numPortsLo;
@@ -38,6 +48,14 @@ public class ArtInputPacket extends ArtnetPacket {
         }
     }
 
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param input1 disable status of input 1
+     * @param input2 disable status of input 2
+     * @param input3 disable status of input 3
+     * @param input4 disable status of input 4
+     */
     public ArtInputPacket(boolean input1, boolean input2, boolean input3, boolean input4) {
         this.numPortsHi = 0;
         this.numPortsLo = 4;

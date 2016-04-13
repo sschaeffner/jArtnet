@@ -21,6 +21,8 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
+ * An implementation of the ArtDmx packet as defined by the Art-Net standard.
+ *
  * @author sschaeffner
  */
 public class ArtDmxPacket extends ArtnetPacket {
@@ -33,6 +35,15 @@ public class ArtDmxPacket extends ArtnetPacket {
 
     /**
      * Constructs a new instance of this class.
+     *
+     * @param sequence  sequence number iterated over 0x01 through 0xFF to ensure that ArtDmx packets are used in the right order
+     * @param physical  the physical input port from which DMX512 data was input
+     * @param subUni    low byte of the 15 bit Port-Address to which the packet is destined
+     * @param net       the top 7 bits of the 15 bit Port-Address to which the packet is destined
+     * @param lengthHi  high byte of the length of the data array
+     * @param length    low byte of the length of the data array
+     * @param data      data array containing DMX512 data
+     * @throws MalformedArtnetPacketException when data is too long
      */
     public ArtDmxPacket(byte sequence, byte physical, byte subUni, byte net, byte lengthHi, byte length, byte[] data) throws MalformedArtnetPacketException {
         this.sequence = sequence;
@@ -48,6 +59,13 @@ public class ArtDmxPacket extends ArtnetPacket {
 
     /**
      * Constructs a new instance of this class.
+     *
+     * @param sequence  sequence number iterated over 0x01 through 0xFF to ensure that ArtDmx packets are used in the right order
+     * @param physical  the physical input port from which DMX512 data was input
+     * @param subUni    low byte of the 15 bit Port-Address to which the packet is destined
+     * @param net       the top 7 bits of the 15 bit Port-Address to which the packet is destined
+     * @param data      data array containing DMX512 data
+     * @throws MalformedArtnetPacketException when data is too long
      */
     public ArtDmxPacket(byte sequence, byte physical, byte subUni, byte net, byte[] data) throws MalformedArtnetPacketException {
         this.sequence = sequence;

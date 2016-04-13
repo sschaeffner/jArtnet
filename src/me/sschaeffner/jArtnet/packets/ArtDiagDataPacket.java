@@ -21,6 +21,8 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
+ * An implementation of the ArtDiagData packet as defined by the Art-Net standard.
+ *
  * @author sschaeffner
  */
 public class ArtDiagDataPacket extends ArtnetPacket {
@@ -36,6 +38,12 @@ public class ArtDiagDataPacket extends ArtnetPacket {
 
     /**
      * Constructs a new instance of this class.
+     *
+     * @param priority  priority of this diagnostic data
+     * @param lengthHi  high byte of the length of the data array
+     * @param lengthLo  low byte of the length of the data array
+     * @param data      data as a null terminated ASCII array
+     * @throws MalformedArtnetPacketException when data is too long
      */
     public ArtDiagDataPacket(byte priority, byte lengthHi, byte lengthLo, byte[] data) throws MalformedArtnetPacketException {
         this.priority = priority;
@@ -48,6 +56,10 @@ public class ArtDiagDataPacket extends ArtnetPacket {
 
     /**
      * Constructs a new instance of this class.
+     *
+     * @param priority  priority of this diagnostic data
+     * @param data      data as a null terminated ASCII array
+     * @throws MalformedArtnetPacketException when data is too long
      */
     public ArtDiagDataPacket(byte priority, byte[] data) throws MalformedArtnetPacketException {
         this(priority, (byte) (data.length >> 8), (byte) data.length, data);
@@ -55,6 +67,10 @@ public class ArtDiagDataPacket extends ArtnetPacket {
 
     /**
      * Constructs a new instance of this class.
+     *
+     * @param priority  priority of this diagnostic data
+     * @param message   message as a String
+     * @throws MalformedArtnetPacketException when message is too long
      */
     public ArtDiagDataPacket(byte priority, String message) throws MalformedArtnetPacketException {
         this.priority = priority;

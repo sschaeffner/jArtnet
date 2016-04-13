@@ -21,6 +21,8 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
+ * An implementation of the ArtIpProgReply packet as defined by the Art-Net standard.
+ *
  * @author sschaeffner
  */
 public class ArtIpProgReplyPacket extends ArtnetPacket {
@@ -31,6 +33,16 @@ public class ArtIpProgReplyPacket extends ArtnetPacket {
     private final byte progPortLo;
     private final byte status;
 
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param progIp        IP address of node
+     * @param progSm        subnet mask of node
+     * @param progPortHi    high byte of the port used by the node
+     * @param progPortLo    low byte of the port used by the node
+     * @param status        Bit 6: DHCP enabled
+     * @throws MalformedArtnetPacketException
+     */
     public ArtIpProgReplyPacket( byte[] progIp, byte[] progSm, byte progPortHi, byte progPortLo, byte status) throws MalformedArtnetPacketException {
         if (progIp.length != 4) throw new MalformedArtnetPacketException("Cannot construct ArtIpProgReplyPacket: wrong progIp length");
         this.progIp = progIp;

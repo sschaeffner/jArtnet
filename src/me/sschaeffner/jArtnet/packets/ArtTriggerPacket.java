@@ -21,6 +21,8 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
+ * An implementation of the ArtTrigger packet as defined by the Art-Net standard.
+ *
  * @author sschaeffner
  */
 public class ArtTriggerPacket extends ArtnetPacket {
@@ -31,6 +33,16 @@ public class ArtTriggerPacket extends ArtnetPacket {
     private final byte subKey;
     private final byte[] data;
 
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param oemCodeHi high byte of the oem code
+     * @param oemCodeLo low byte of the oem code
+     * @param key       the trigger key
+     * @param subKey    the trigger subkey
+     * @param data      additional data
+     * @throws MalformedArtnetPacketException when data is too long
+     */
     public ArtTriggerPacket(byte oemCodeHi, byte oemCodeLo, byte key, byte subKey, byte[] data) throws MalformedArtnetPacketException {
         this.oemCodeHi = oemCodeHi;
         this.oemCodeLo = oemCodeLo;
@@ -41,6 +53,16 @@ public class ArtTriggerPacket extends ArtnetPacket {
         this.data = data;
     }
 
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param oemCodeHi high byte of the oem code
+     * @param oemCodeLo low byte of the oem code
+     * @param key       the trigger key
+     * @param subKey    the trigger subkey
+     * @param data      additional data
+     * @throws MalformedArtnetPacketException when data is too long
+     */
     public ArtTriggerPacket(byte oemCodeHi, byte oemCodeLo, byte key, byte subKey, String data) throws MalformedArtnetPacketException {
         this.oemCodeHi = oemCodeHi;
         this.oemCodeLo = oemCodeLo;

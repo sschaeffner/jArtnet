@@ -21,10 +21,15 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
+ * An implementation of the ArtSync packet as defined by the Art-Net standard.
+ *
  * @author sschaeffner
  */
 public class ArtSyncPacket extends ArtnetPacket {
 
+    /**
+     * Constructs a new instance of this class.
+     */
     public ArtSyncPacket() {}
 
     @Override

@@ -21,6 +21,8 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
+ * An implementation of the ArtCommand packet as defined by the Art-Net standard.
+ *
  * @author sschaeffner
  */
 public class ArtCommandPacket extends ArtnetPacket {
@@ -31,6 +33,16 @@ public class ArtCommandPacket extends ArtnetPacket {
     private final byte[] data;
 
 
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param estaManHi high byte of the ESTA manufacturer code
+     * @param estaManLo low byte of the ESTA manufacturer code
+     * @param lengthHi  high byte of the length of the data array
+     * @param lengthLo  low byte of the length of the data array
+     * @param data      text command as a null terminated ASCII array
+     * @throws MalformedArtnetPacketException when data is too long
+     */
     public ArtCommandPacket(byte estaManHi, byte estaManLo, byte lengthHi, byte lengthLo, byte[] data) throws MalformedArtnetPacketException {
         this.estaManHi = estaManHi;
         this.estaManLo = estaManLo;
@@ -41,12 +53,22 @@ public class ArtCommandPacket extends ArtnetPacket {
         this.data = data;
     }
 
-    public ArtCommandPacket(byte estaManHi, byte estaManLo, String data) {
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param estaManHi high byte of the ESTA manufacturer code
+     * @param estaManLo low byte of the ESTA manufacturer code
+     * @param data      text command as a String
+     * @throws MalformedArtnetPacketException when data is too long
+     */
+    public ArtCommandPacket(byte estaManHi, byte estaManLo, String data) throws MalformedArtnetPacketException {
         this.estaManHi = estaManHi;
         this.estaManLo = estaManLo;
         this.data = stringToAsciiArrayNullTerminated(data);
         this.lengthHi = (byte)(this.data.length >> 8);
         this.lengthLo = (byte)this.data.length;
+
+        if (this.data.length > 512) throw new MalformedArtnetPacketException("Cannot construct ArtCommandPacket: data too long");
     }
 
     @Override

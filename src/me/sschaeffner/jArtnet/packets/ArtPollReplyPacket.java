@@ -24,7 +24,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * An ArtPollReply packet.
+ * An implementation of the ArtPollReply packet as defined by the Art-Net standard.
  *
  * @author sschaeffner
  */
@@ -56,6 +56,37 @@ public class ArtPollReplyPacket extends ArtnetPacket {
 
     /**
      * Constructs a new instance of this class.
+     *
+     * @param address       array containing the node's ip address
+     * @param versInfoH     high byte of the node's firmare revision number
+     * @param versInfoL     low byte of the node's firmare revision number
+     * @param netSwitch     Bits 14-8 of the 15 bit Port-Address are encoded into the bottom 7 bits of this field
+     * @param subSwitch     Bits 7-4 of the 15 bit Port-Address are encoded into the bottom 4 bits of this field
+     * @param oemHi         high byte of the oem value
+     * @param oem           low byte of the oem value
+     * @param ubeaVersion   firmware version of the User Bios Extension Area
+     * @param status1       general status register
+     * @param estaManLo     low byte of the esta manufacturer code
+     * @param estaManHi     high byte of the esta manufacturer code
+     * @param shortName     short name of the node as a null terminated ASCII array
+     * @param longName      long name of the node as a null terminated ASCII array
+     * @param nodeReport    textual report of the node's status
+     * @param numPortsHi    high byte of the word describing the number of in-/output ports of the node
+     * @param numPortsLo    low byte of the word describing the number of in-/output ports of the node
+     * @param portTypes     array defining the operation and protocol of each channel
+     * @param goodInput     array defining the input status of the node
+     * @param goodOutput    array defining the output status of the node
+     * @param swIn          Bits 3-0 of the 15 bit Port-Address for each of the 4 possible input ports are encoded into the low nibble
+     * @param swOut         Bits 3-0 of the 15 bit Port-Address for each of the 4 possible output ports are encoded into the low nibble
+     * @param swVideo       deprecated (0x00 when video display is showing local data, 0x01 when showing ethernet data)
+     * @param swMacro       trigger values of the node's macro key inputs
+     * @param swRemote      trigger values of the node's trigger key inputs
+     * @param style         the equipment style of the node
+     * @param mac           the node's mac address
+     * @param bindIp        IP of the root device
+     * @param bindIndex     the order of bound devices
+     * @param status2       second general status register
+     * @throws MalformedArtnetPacketException
      */
     public ArtPollReplyPacket(InetAddress address, byte versInfoH, byte versInfoL, byte netSwitch, byte subSwitch,
                               byte oemHi, byte oem, byte ubeaVersion, byte status1, byte estaManLo, byte estaManHi,

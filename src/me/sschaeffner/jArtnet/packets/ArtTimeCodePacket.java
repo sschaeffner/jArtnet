@@ -21,6 +21,8 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
+ * An implementation of the ArtTimeCode packet as defined by the Art-Net standard.
+ *
  * @author sschaeffner
  */
 public class ArtTimeCodePacket extends ArtnetPacket {
@@ -32,6 +34,15 @@ public class ArtTimeCodePacket extends ArtnetPacket {
     private final byte type;
 
 
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param frames    frames time
+     * @param seconds   seconds time
+     * @param minutes   minutes time
+     * @param hours     hours time
+     * @param type      time code type
+     */
     public ArtTimeCodePacket(byte frames, byte seconds, byte minutes, byte hours, byte type) {
         this.frames = frames;
         this.seconds = seconds;

@@ -23,7 +23,7 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
- * An ArtPoll packet.
+ * An implementation of the ArtPoll packet as defined by the Art-Net standard.
  *
  * @author sschaeffner
  */

@@ -21,7 +21,7 @@ import me.sschaeffner.jArtnet.ArtnetNode;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
- * This is an Art-Net Packet.
+ * An Art-Net packet.
  *
  * @author sschaeffner
  */
@@ -52,4 +52,15 @@ public abstract class ArtnetPacket {
      * @return the packet's data as byte array
      */
     public abstract byte[] getPacketBytes() throws MalformedArtnetPacketException;
+
+    /**
+     * Returns the packet in the form of a byte[] as a subclass of ArtnetPacket.
+     *
+     * @param bytes packet data
+     * @return      the packet as an ArtnetPacket
+     * @throws MalformedArtnetPacketException when the packet data does not match the requirements for the packet type
+     */
+    public static ArtnetPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
+        throw new MalformedArtnetPacketException("Subclass has not implemented fromBytes() method.");
+    }
 }
