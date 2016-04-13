@@ -55,6 +55,24 @@ public class ArtDiagDataPacketTest {
     }
 
     @Test
+    public void constructionTest2() throws MalformedArtnetPacketException {
+        byte priority = ArtNetPriorityCodes.DP_CRITICAL;
+        byte[] data = ArtDiagDataPacket.stringToAsciiArrayNullTerminated("Important Message");
+        byte lengthHi = (byte) (data.length >> 8);
+        byte lengthLo = (byte) data.length;
+
+        ArtDiagDataPacket pOrig = new ArtDiagDataPacket(priority, data);
+        byte[] bytes = pOrig.getPacketBytes();
+
+        ArtDiagDataPacket p = ArtDiagDataPacket.fromBytes(bytes);
+        Assert.assertEquals(pOrig.getPriority(), p.getPriority());
+        Assert.assertEquals(pOrig.getLengthHi(), p.getLengthHi());
+        Assert.assertEquals(pOrig.getLengthLo(), p.getLengthLo());
+        Assert.assertArrayEquals(pOrig.getData(), p.getData());
+        Assert.assertEquals(pOrig.getMessageAsString(), p.getMessageAsString());
+    }
+
+    @Test
     public void sendPacketTest() throws MalformedArtnetPacketException {
         ArtDiagDataPacket p = new ArtDiagDataPacket(ArtNetPriorityCodes.DP_CRITICAL, "hello world");
         ArtnetController controller = new ArtnetController(false, false);
