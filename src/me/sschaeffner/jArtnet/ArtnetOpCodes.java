@@ -152,6 +152,10 @@ public final class ArtnetOpCodes {
                         System.out.println("OP_INPUT");
                         return ArtInputPacket.fromBytes(bytes);
 
+                    case ArtnetOpCodes.OP_ADDRESS:
+                        System.out.println("OP_ADDRESS");
+                        return ArtAddressPacket.fromBytes(bytes);
+
                     default:
                         System.out.println("unimplemented artnet packet: (opcode=" + opCode + ")");
                         break;

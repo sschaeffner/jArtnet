@@ -16,6 +16,7 @@ Packets currently implemented:
 * ArtTrigger
 * ArtNzs
 * ArtInput
+* ArtAddress
 
 Currently tested with:
 
