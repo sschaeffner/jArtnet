@@ -25,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 /**
@@ -73,9 +74,9 @@ public class ArtDiagDataPacketTest {
     }
 
     @Test
-    public void sendPacketTest() throws MalformedArtnetPacketException {
+    public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         ArtDiagDataPacket p = new ArtDiagDataPacket(ArtNetPriorityCodes.DP_CRITICAL, "hello world");
-        ArtnetController controller = new ArtnetController(false, false);
+        ArtnetController controller = ArtnetController.getInstance(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

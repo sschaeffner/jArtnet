@@ -21,6 +21,8 @@ import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 /**
+ * An implementation of the ArtAddress packet as defined by the Art-Net standard.
+ *
  * @author sschaeffner
  */
 public class ArtAddressPacket extends ArtnetPacket {

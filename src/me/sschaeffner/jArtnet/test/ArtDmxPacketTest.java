@@ -25,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 /**
@@ -65,7 +66,7 @@ public class ArtDmxPacketTest {
     }
 
     @Test
-    public void sendPacketTest() throws MalformedArtnetPacketException {
+    public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         byte[] data = new byte[512];
         for (int i = 0; i < 512; i++) {
             data[i] = (byte) (i % 256);
@@ -75,7 +76,7 @@ public class ArtDmxPacketTest {
         byte[] bytes = pOrig.getPacketBytes();
         ArtDmxPacket p = ArtDmxPacket.fromBytes(bytes);
 
-        ArtnetController controller = new ArtnetController(false, false);
+        ArtnetController controller = ArtnetController.getInstance(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

@@ -36,6 +36,9 @@ import java.util.Enumeration;
  */
 public class ArtnetController {
 
+    //singleton instance
+    private static ArtnetController instance;
+
     //controller style code
     private static final int STYLE_CODE = ArtnetStyleCodes.ST_CONTROLLER;
 
@@ -63,14 +66,7 @@ public class ArtnetController {
     /**
      * Constructs a new instance of this class.
      */
-    public ArtnetController() {
-        this(true, true);
-    }
-
-    /**
-     * Constructs a new instance of this class.
-     */
-    public ArtnetController(boolean enableBroadcast, boolean enableRecieverThread) {
+    private ArtnetController(boolean enableBroadcast, boolean enableRecieverThread) throws IOException {
         this.nodes = new ArrayList<>();
         this.listeners = new ArrayList<>();
 
@@ -79,7 +75,7 @@ public class ArtnetController {
             if (bca.length > 0) {
                 System.out.println("using " + bca[0]);
                 broadcastAddress = bca[0];
-            } else System.err.println("no broadcast address available");
+            } else throw new IOException("cannot start ArtnetController: broadcast enabled but no broadcast address found");
         } else {
             this.broadcastAddress = null;
         }
@@ -89,7 +85,7 @@ public class ArtnetController {
             socket = new DatagramSocket(ArtnetPacket.UDP_PORT);
         } catch (SocketException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("cannot start ArtnetController: cannot open socket");
+            throw new IOException("cannot start ArtnetController: cannot open socket");
         }
 
         if (enableRecieverThread) {
@@ -390,6 +386,18 @@ public class ArtnetController {
 
     public void setIgnoreOwnPackets(boolean ignoreOwnPackets) {
         this.ignoreOwnPackets = ignoreOwnPackets;
+    }
+
+    /**
+     * Returns a singleton instance of this class.
+     *
+     * @param enableBroadcast       whether or not an InetAddress for broadcasting should be searched for
+     * @param enableReceiverThread  whether or not the receiver thread should be enabled
+     * @return a singleton instance of this class
+     */
+    public static ArtnetController getInstance(boolean enableBroadcast, boolean enableReceiverThread) throws IOException {
+        if (instance == null) instance = new ArtnetController(enableBroadcast, enableReceiverThread);
+        return instance;
     }
 
     /**

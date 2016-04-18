@@ -23,6 +23,7 @@ import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -140,7 +141,7 @@ public class ArtPollReplyPacketTest {
     }
 
     @Test
-    public void sendPacketTest() throws MalformedArtnetPacketException {
+    public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         InetAddress address = InetAddress.getLoopbackAddress();
         byte versInfoH = (byte)0x1;
         byte versInfoL = (byte)0x2;
@@ -193,7 +194,7 @@ public class ArtPollReplyPacketTest {
                 oem, ubeaVersion, status1, estaManLo, estaManHi, shortName, longName, nodeReport, numPortsHi,
                 numPortsLo, portTypes, goodInput, goodOutput, swIn, swOut, swVideo, swMacro, swRemote, style,
                 mac, bindIp, bindIndex, status2);
-        ArtnetController controller = new ArtnetController(false, false);
+        ArtnetController controller = ArtnetController.getInstance(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

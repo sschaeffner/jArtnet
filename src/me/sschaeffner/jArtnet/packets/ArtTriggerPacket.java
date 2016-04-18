@@ -137,7 +137,6 @@ public class ArtTriggerPacket extends ArtnetPacket {
         for (int i = 16; i < bytes.length; i++) {
             if (bytes[i] == (byte) 0x00) lengthI = i - 15;
         }
-        System.out.println("data length: " + lengthI);
 
         byte[] data = new byte[lengthI];
         if (bytes.length >= lengthI + 16) {

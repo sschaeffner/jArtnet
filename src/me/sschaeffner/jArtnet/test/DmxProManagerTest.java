@@ -32,7 +32,7 @@ import java.io.InputStreamReader;
  * @author sschaeffner
  */
 public class DmxProManagerTest implements ArtnetPacketListener {
-    public static void main(String[] args) throws MalformedArtnetPacketException {
+    public static void main(String[] args) throws MalformedArtnetPacketException, IOException {
         DmxProManagerTest t = new DmxProManagerTest();
         t.sendData();
         t.controller.discoverNodes();
@@ -54,8 +54,8 @@ public class DmxProManagerTest implements ArtnetPacketListener {
 
     private ArtnetController controller;
 
-    public DmxProManagerTest() {
-        controller = new ArtnetController();
+    public DmxProManagerTest() throws IOException {
+        controller = ArtnetController.getInstance(true, true);
     }
 
 

@@ -26,6 +26,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 /**
@@ -66,7 +67,7 @@ public class ArtAddressPacketTest {
     }
 
     @Test
-    public void sendPacketTest() throws MalformedArtnetPacketException {
+    public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         byte netSwitch = (byte)0x42;
         byte[] shortName = new byte[]{(byte)'h', (byte)'e', (byte)'l', (byte)'l', (byte)'o', (byte)' ', (byte)'w', (byte)'o',
                 (byte)'r', (byte)'l', (byte)'d', (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00};
@@ -79,7 +80,7 @@ public class ArtAddressPacketTest {
         byte command = (byte) 0x04;//AcLedLocate: flash front panel indicators rapidly
 
         ArtAddressPacket p = new ArtAddressPacket(netSwitch, shortName, longName, swIn, swOut, subSwitch, swVideo, command);
-        ArtnetController controller = new ArtnetController(false, false);
+        ArtnetController controller = ArtnetController.getInstance(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

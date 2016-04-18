@@ -26,6 +26,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 /**
@@ -83,7 +84,7 @@ public class ArtNzsPacketTest {
     }
 
     @Test
-    public void sendPacketTest() throws MalformedArtnetPacketException {
+    public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         byte sequence = (byte) 0x10;
         byte startCode = (byte) 0x01;
         byte subUni = (byte) 0x02;
@@ -93,7 +94,7 @@ public class ArtNzsPacketTest {
         byte[] data = new byte[]{(byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05};
 
         ArtNzsPacket p = new ArtNzsPacket(sequence, startCode, subUni, net, lengthHi, length, data);
-        ArtnetController controller = new ArtnetController(false, false);
+        ArtnetController controller = ArtnetController.getInstance(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

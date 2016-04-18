@@ -26,6 +26,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 /**
@@ -47,11 +48,6 @@ public class ArtTriggerPacketTest {
 
         ArtTriggerPacket pOrig = new ArtTriggerPacket(oemCodeHi, oemCodeLo, key, subkey, data);
         byte[] bytes = pOrig.getPacketBytes();
-
-        for (int i = 0; i < bytes.length; i++) {
-            System.out.print("0x" + Integer.toHexString(bytes[i]) + " " + Byte.toUnsignedInt(bytes[i]) + " ");
-            if (i % 8 == 7) System.out.println();
-        }
 
         ArtTriggerPacket p = ArtTriggerPacket.fromBytes(bytes);
 
@@ -82,7 +78,7 @@ public class ArtTriggerPacketTest {
     }
 
     @Test
-    public void sendPacketTest() throws MalformedArtnetPacketException {
+    public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         byte oemCodeLo = (byte) 0xff;
         byte oemCodeHi = (byte) 0xff;
         byte key = (byte) 0x00;//key ascii
@@ -90,7 +86,7 @@ public class ArtTriggerPacketTest {
         byte[] data = new byte[1];
 
         ArtTriggerPacket p = new ArtTriggerPacket(oemCodeHi, oemCodeLo, key, subkey, data);
-        ArtnetController controller = new ArtnetController(false, false);
+        ArtnetController controller = ArtnetController.getInstance(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

@@ -105,60 +105,46 @@ public final class ArtnetOpCodes {
 
                 switch (opCode) {
                     case ArtnetOpCodes.OP_OUTPUT:
-                        System.out.println("OP_OUTPUT");
                         return ArtDmxPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_POLL:
-                        System.out.println("OP_POLL");
                         return ArtPollPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_POLL_REPLY:
-                        System.out.println("OP_POLL_REPLY");
                         return ArtPollReplyPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_DIAG_DATA:
-                        System.out.println("OP_DIAG_DATA");
                         return ArtDiagDataPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_IP_PROG:
-                        System.out.println("OP_IP_PROG");
                         return ArtIpProgPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_IP_PROG_REPLY:
-                        System.out.println("OP_IP_PROG_REPLY");
                         return ArtIpProgReplyPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_SYNC:
-                        System.out.println("OP_SYNC");
                         return ArtSyncPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_TIME_CODE:
-                        System.out.println("OP_TIME_CODE");
                         return ArtTimeCodePacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_COMMAND:
-                        System.out.println("OP_COMMAND");
                         return ArtCommandPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_TRIGGER:
-                        System.out.println("OP_TRIGGER");
                         return ArtTriggerPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_NZS:
-                        System.out.println("OP_NZS");
                         return ArtNzsPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_INPUT:
-                        System.out.println("OP_INPUT");
                         return ArtInputPacket.fromBytes(bytes);
 
                     case ArtnetOpCodes.OP_ADDRESS:
-                        System.out.println("OP_ADDRESS");
                         return ArtAddressPacket.fromBytes(bytes);
 
                     default:
-                        System.out.println("unimplemented artnet packet: (opcode=" + opCode + ")");
-                        break;
+                        throw new MalformedArtnetPacketException("unimplemented artnet packet (opcode " + opCode + ")");
                 }
             } else {
                 System.out.println("not artnet packet: wrong packet ID");

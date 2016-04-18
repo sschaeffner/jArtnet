@@ -26,6 +26,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 /**
@@ -75,7 +76,7 @@ public class ArtCommandPacketTest {
     }
 
     @Test
-    public void sendPacketTest() throws MalformedArtnetPacketException {
+    public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         byte estaManHi = (byte) 0x00;
         byte estaManLo = (byte) 0xFF;
         byte[] data = new byte[]{(byte)'S', (byte)'w', (byte)'o', (byte)'u', (byte)'t', (byte)'T', (byte)'e', (byte)'x', (byte)'t',
@@ -84,17 +85,17 @@ public class ArtCommandPacketTest {
         byte lengthLo = (byte)data.length;
 
         ArtCommandPacket p = new ArtCommandPacket(estaManHi, estaManLo, lengthHi, lengthLo, data);
-        ArtnetController controller = new ArtnetController(false, false);
+        ArtnetController controller = ArtnetController.getInstance(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 
     @Test
-    public void sendPacketTest2() throws MalformedArtnetPacketException {
+    public void sendPacketTest2() throws MalformedArtnetPacketException, IOException {
         byte estaManHi = (byte) 0x00;
         byte estaManLo = (byte) 0xFF;
         String data = "SwoutText=Playback&";
         ArtCommandPacket p = new ArtCommandPacket(estaManHi, estaManLo, data);
-        ArtnetController controller = new ArtnetController(false, false);
+        ArtnetController controller = ArtnetController.getInstance(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

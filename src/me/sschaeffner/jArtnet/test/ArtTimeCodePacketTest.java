@@ -25,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 /**
@@ -57,7 +58,7 @@ public class ArtTimeCodePacketTest {
     }
 
     @Test
-    public void sendPacketTest() throws MalformedArtnetPacketException {
+    public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         byte frames = 1;
         byte seconds = 2;
         byte minutes = 3;
@@ -65,7 +66,7 @@ public class ArtTimeCodePacketTest {
         byte type = (byte)0b0010;
 
         ArtTimeCodePacket p = new ArtTimeCodePacket(frames, seconds, minutes, hours, type);
-        ArtnetController controller = new ArtnetController(false, false);
+        ArtnetController controller = ArtnetController.getInstance(false, false);
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

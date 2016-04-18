@@ -17,12 +17,17 @@
  */
 package me.sschaeffner.jArtnet.test;
 
+import me.sschaeffner.jArtnet.ArtnetNode;
+import me.sschaeffner.jArtnet.ArtnetStyleCodes;
 import me.sschaeffner.jArtnet.packets.ArtPollPacket;
 import me.sschaeffner.jArtnet.ArtnetController;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * @author sschaeffner
@@ -32,16 +37,15 @@ public class ControllerTest {
     ArtnetController controller;
 
     @Before
-    public void setup() {
-        controller = new ArtnetController();
+    public void setup() throws IOException {
+        controller = ArtnetController.getInstance(false, false);
     }
 
     @Test
-    public void packetSendTest() throws MalformedArtnetPacketException {
+    public void packetSendTest() throws MalformedArtnetPacketException, IOException {
         ArtPollPacket pollPacket = new ArtPollPacket();
-        for (byte b : pollPacket.getPacketBytes()) System.out.print(Byte.toUnsignedInt(b) + " "); System.out.println();
-        controller.broadcastPacket(pollPacket);
-        System.out.println("packet sent");
+        ArtnetController controller = ArtnetController.getInstance(false, false);
+        controller.unicastPacket(pollPacket, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 
     @After
