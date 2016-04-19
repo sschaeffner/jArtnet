@@ -55,8 +55,11 @@ public class ArtnetController {
     //receiver thread listening for Art-Net packets
     private final Thread receiverThread;
 
-    //list of listeners for received Art-Net packets
-    private final Set<ArtnetPacketListener> listeners;
+    //set of packetListeners for received Art-Net packets
+    private final Set<ArtnetPacketListener> packetListeners;
+
+    //set of packetListeners for newly discovered Art-Net nodes
+    private final Set<ArtnetNodeListener> nodeListeners;
 
     //whether to ignore packets sent from this controller
     private boolean ignoreOwnPackets = true;
@@ -71,11 +74,12 @@ public class ArtnetController {
         this.host = host;
         this.port = port;
         this.nodes = new ArrayList<>();
-        this.listeners = new HashSet<>();
+        this.packetListeners = new HashSet<>();
+        this.nodeListeners = new HashSet<>();
 
         //open udp socket
         try {
-            socket = new DatagramSocket(new InetSocketAddress(this.host.getInterfaceAddress().getAddress(), this.port));
+            socket = new DatagramSocket(this.port);
         } catch (SocketException e) {
             e.printStackTrace();
             throw new IOException("cannot start ArtnetController: cannot open socket");
@@ -100,7 +104,8 @@ public class ArtnetController {
                         } catch (SocketException e) {
                             //do nothing as the socket is just closed
                         } catch (MalformedArtnetPacketException e) {
-                            e.printStackTrace();
+                            System.err.println("received malformed packet (" + e.getMessage() + ")");
+                            //TODO print stacktrace to separate log
                         }
                     }
                 }
@@ -224,21 +229,44 @@ public class ArtnetController {
         //ignore packets sent from this controller
         if (!(ignoreOwnPackets && (this.host.getInterfaceAddress().getAddress().equals(sender) || (localhost != null && localhost.equals(sender))))) {
 
-            ArtnetPacket artnetPacket = ArtnetOpCodes.fromBytes(bytes);
-            if (artnetPacket != null) {
-                //if ArtPollReply is sent, add all new nodes to list
-                if (artnetPacket instanceof ArtPollReplyPacket) {
-                    handleArtPollReplyPackets((ArtPollReplyPacket) artnetPacket, sender);
-                } else {
-                    //set sender node for other packets
-                    ArtnetNode senderNode = getNodeFromInetAddress(sender);
-                    if (senderNode != null) artnetPacket.setSender(senderNode);
+            //ignore packets from wrong subnet
+            if (ipIsInHostSubnet(sender)) {
 
-                    //inform listeners
-                    listeners.forEach(listener -> listener.onArtnetPacketReceive(artnetPacket));
+                ArtnetPacket artnetPacket = ArtnetOpCodes.fromBytes(bytes);
+                if (artnetPacket != null) {
+                    //if ArtPollReply is sent, add all new nodes to list
+                    if (artnetPacket instanceof ArtPollReplyPacket) {
+                        handleArtPollReplyPackets((ArtPollReplyPacket) artnetPacket, sender);
+                    } else {
+                        //set sender node for other packets
+                        ArtnetNode senderNode = getNodeFromInetAddress(sender);
+                        if (senderNode != null) artnetPacket.setSender(senderNode);
+
+                        //inform packetListeners
+                        packetListeners.forEach(listener -> listener.onArtnetPacketReceive(new ArtnetPacketReceiveEvent(artnetPacket)));
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * Returns whether a given InetAddress is in the host's subnet.
+     *
+     * @param address   InetAddress to check
+     * @return          whether a given InetAddress is in the host's subnet.
+     */
+    private boolean ipIsInHostSubnet(InetAddress address) {
+        byte[] hostAddr = host.getBroadcastAddress().getAddress();
+        byte[] cmpAddr = address.getAddress();
+
+        for (int i = 0; i < 4; i++) {
+            if (hostAddr[i] != (byte)255) {
+                if (hostAddr[i] != cmpAddr[i]) return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -256,7 +284,9 @@ public class ArtnetController {
             //create new node and add it to the list
             ArtnetNode node = new ArtnetNode(sender, packet);
             nodes.add(node);
-            System.out.println("new node: " + node);
+
+            //inform nodeListeners
+            nodeListeners.forEach(listener -> listener.onArtnetNodeDiscovery(new ArtnetNodeDiscoveryEvent(node)));
         } else {
             //update ArtnetNode information
             senderNode.setArtPollReplyPacket(packet);
@@ -317,7 +347,36 @@ public class ArtnetController {
      * @param listener ArtnetPacketListener instance
      */
     public void addArtnetPacketListener(ArtnetPacketListener listener) {
-        listeners.add(listener);
+        packetListeners.add(listener);
+    }
+
+    /**
+     * Removes an ArtnetPacketListener.
+     *
+     * @param listener  ArtnetPacketListener instance
+     * @return <tt>true</tt> if the listener was registered and successfully removed
+     */
+    public boolean removeArtnetPacketListener(ArtnetPacketListener listener) {
+        return packetListeners.remove(listener);
+    }
+
+    /**
+     * Adds an ArtnetNodeListener.
+     *
+     * @param listener ArtnetNodeListener instance
+     */
+    public void addArtnetNodeDiscoveryListener(ArtnetNodeListener listener) {
+        nodeListeners.add(listener);
+    }
+
+    /**
+     * Removes an ArtnetNodeListener.
+     *
+     * @param listener ArtnetNodeListener instance
+     * @return <tt>true</tt> if the listener was registered and successfully removed
+     */
+    public boolean removeArtnetNodeDiscoveryListener(ArtnetNodeListener listener) {
+        return nodeListeners.remove(listener);
     }
 
     /**
@@ -329,15 +388,6 @@ public class ArtnetController {
         return nodes.toArray(new ArtnetNode[nodes.size()]);
     }
 
-    /**
-     * Removes an ArtnetPacketListener.
-     *
-     * @param listener  ArtnetPacketListener instance
-     * @return <tt>true</tt> if the listener was registered and successfully removed
-     */
-    public boolean removeArtnetPacketListener(ArtnetPacketListener listener) {
-        return listeners.remove(listener);
-    }
 
     /**
      * Whether or not to ignore own packets.

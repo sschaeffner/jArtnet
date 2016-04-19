@@ -142,6 +142,8 @@ public class ArtDmxPacket extends ArtnetPacket {
         byte rProtVerHi = bytes[10];
         byte rProtVerLo = bytes[11];
         if (rProtVerHi < protVerHi || rProtVerLo < protVerLo) {
+            System.out.println("rPortVerHi=" + rProtVerHi);
+            System.out.println("rPortVerLo=" + rProtVerLo);
             throw new MalformedArtnetPacketException("cannot construct ArtDmxPacket from data: protVer not compatible");
         }
 

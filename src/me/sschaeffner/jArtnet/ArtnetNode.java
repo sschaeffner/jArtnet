@@ -64,7 +64,7 @@ public class ArtnetNode {
     @Override
     public String toString() {
         if (longName != null) {
-            return "ArtnetNode{" + this.longName + "; " + inetAddress.getHostAddress() + "; " + ArtnetStyleCodes.toName(styleCode) + "}";
+            return "ArtnetNode{" + this.shortName + "; " + this.longName + "; " + inetAddress.getHostAddress() + "; " + ArtnetStyleCodes.toName(styleCode).toUpperCase() + "}";
         } else {
             return "ArtnetNode{" + inetAddress.getHostAddress() + "; " + ArtnetStyleCodes.toName(styleCode) + "}";
         }

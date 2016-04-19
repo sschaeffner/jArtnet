@@ -20,12 +20,11 @@ package me.sschaeffner.jArtnet;
 /**
  * @author sschaeffner
  */
-public interface ArtnetPacketListener {
-
+public interface ArtnetNodeListener {
     /**
-     * Called upon receiving an Art-Net packet.
+     * Called upon discovery of a new Art-Net node.
      *
-     * @param event event for the received Art-Net packet
+     * @param event event for the newly discovered Art-Net node
      */
-    void onArtnetPacketReceive(ArtnetPacketReceiveEvent event);
+    void onArtnetNodeDiscovery(ArtnetNodeDiscoveryEvent event);
 }

@@ -29,7 +29,7 @@ import java.io.InputStreamReader;
 /**
  * @author sschaeffner
  */
-public class DmxProManagerTest implements ArtnetPacketListener {
+public class DmxProManagerTest implements ArtnetPacketListener, ArtnetNodeListener {
     public static void main(String[] args) throws MalformedArtnetPacketException, IOException {
         DmxProManagerTest t = new DmxProManagerTest();
         t.sendData();
@@ -47,16 +47,38 @@ public class DmxProManagerTest implements ArtnetPacketListener {
         }*/
         t.fade();
 
-        t.controller.closeSocket();
+        //t.controller.closeSocket();
     }
 
     private ArtnetController controller;
 
     private DmxProManagerTest() throws IOException {
         NetworkAddress[] nwadd = NetworkAddress.getNetworkAddresses();
-        if (nwadd.length > 0){
-            controller = ArtnetControllerFactory.getInstance(nwadd[0], 6454);
+
+        System.out.println("available network addresses: ");
+
+        for (int i = 0; i < nwadd.length; i++) {
+            System.out.println(i + ": " + nwadd[i]);
         }
+
+        System.out.print("network address# ");
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String in = reader.readLine();
+        int choice = -1;
+        try {
+            choice = Integer.valueOf(in);
+        } catch (NumberFormatException e) {
+            System.err.println("not a number");
+        }
+
+        if (choice != -1) {
+            controller = ArtnetControllerFactory.getInstance(nwadd[choice], 6454);
+        } else {
+            throw new IllegalStateException("no controller");
+        }
+        controller.addArtnetPacketListener(this);
+        controller.addArtnetNodeDiscoveryListener(this);
     }
 
 
@@ -65,11 +87,11 @@ public class DmxProManagerTest implements ArtnetPacketListener {
         byte physical = 0;
         byte subUni = 0;
         byte net = 0;
-        byte[] data = new byte[]{(byte)0, (byte)0, (byte)0};
+        byte[] data = new byte[512];
 
         ArtDmxPacket dmxPacket = new ArtDmxPacket(sequence, physical, subUni, net, data);
         controller.broadcastPacket(dmxPacket);
-        System.out.println("ArtDmx packet send");
+        System.out.println("empty packet send");
     }
 
     public void in() throws IOException, MalformedArtnetPacketException {
@@ -136,7 +158,13 @@ public class DmxProManagerTest implements ArtnetPacketListener {
     }
 
     @Override
-    public void onArtnetPacketReceive(ArtnetPacket packet) {
-        System.out.println("packet from: " + packet.getSender());
+    public void onArtnetPacketReceive(ArtnetPacketReceiveEvent event) {
+        System.out.println("packet from: " + event.getReceivedPacket().getSender() + " -> " + event.getReceivedPacket());
+
+    }
+
+    @Override
+    public void onArtnetNodeDiscovery(ArtnetNodeDiscoveryEvent event) {
+        System.out.println("node discovered: " + event.getNewNode());
     }
 }
