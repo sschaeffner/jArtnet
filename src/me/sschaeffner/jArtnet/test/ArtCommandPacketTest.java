@@ -85,7 +85,7 @@ public class ArtCommandPacketTest {
         byte lengthLo = (byte)data.length;
 
         ArtCommandPacket p = new ArtCommandPacket(estaManHi, estaManLo, lengthHi, lengthLo, data);
-        ArtnetController controller = ArtnetController.getInstance(false, false);
+        ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 
@@ -95,7 +95,7 @@ public class ArtCommandPacketTest {
         byte estaManLo = (byte) 0xFF;
         String data = "SwoutText=Playback&";
         ArtCommandPacket p = new ArtCommandPacket(estaManHi, estaManLo, data);
-        ArtnetController controller = ArtnetController.getInstance(false, false);
+        ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

@@ -76,7 +76,7 @@ public class ArtDmxPacketTest {
         byte[] bytes = pOrig.getPacketBytes();
         ArtDmxPacket p = ArtDmxPacket.fromBytes(bytes);
 
-        ArtnetController controller = ArtnetController.getInstance(false, false);
+        ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

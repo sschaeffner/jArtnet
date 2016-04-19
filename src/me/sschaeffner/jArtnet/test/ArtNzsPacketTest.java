@@ -94,7 +94,7 @@ public class ArtNzsPacketTest {
         byte[] data = new byte[]{(byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05};
 
         ArtNzsPacket p = new ArtNzsPacket(sequence, startCode, subUni, net, lengthHi, length, data);
-        ArtnetController controller = ArtnetController.getInstance(false, false);
+        ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

@@ -194,7 +194,7 @@ public class ArtPollReplyPacketTest {
                 oem, ubeaVersion, status1, estaManLo, estaManHi, shortName, longName, nodeReport, numPortsHi,
                 numPortsLo, portTypes, goodInput, goodOutput, swIn, swOut, swVideo, swMacro, swRemote, style,
                 mac, bindIp, bindIndex, status2);
-        ArtnetController controller = ArtnetController.getInstance(false, false);
+        ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

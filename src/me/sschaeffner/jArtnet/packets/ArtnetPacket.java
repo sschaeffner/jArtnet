@@ -29,7 +29,6 @@ public abstract class ArtnetPacket {
     static final byte protVerHi = 3;
     static final byte protVerLo = 14;
 
-    public static final int UDP_PORT = 0x1936;//6454
     public static final byte[] ID = new byte[]{'A', 'r', 't', '-', 'N', 'e', 't', 0x00};
 
     private ArtnetNode sender;

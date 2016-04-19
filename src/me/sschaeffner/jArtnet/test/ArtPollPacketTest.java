@@ -97,7 +97,7 @@ public class ArtPollPacketTest {
     @Test
     public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         ArtPollPacket p = new ArtPollPacket();
-        ArtnetController controller = ArtnetController.getInstance(false, false);
+        ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

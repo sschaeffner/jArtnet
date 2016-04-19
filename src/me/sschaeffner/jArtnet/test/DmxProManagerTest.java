@@ -18,11 +18,9 @@
 
 package me.sschaeffner.jArtnet.test;
 
-import me.sschaeffner.jArtnet.ArtnetController;
-import me.sschaeffner.jArtnet.ArtnetPacketListener;
+import me.sschaeffner.jArtnet.*;
 import me.sschaeffner.jArtnet.packets.ArtDmxPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
-import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,12 +52,15 @@ public class DmxProManagerTest implements ArtnetPacketListener {
 
     private ArtnetController controller;
 
-    public DmxProManagerTest() throws IOException {
-        controller = ArtnetController.getInstance(true, true);
+    private DmxProManagerTest() throws IOException {
+        NetworkAddress[] nwadd = NetworkAddress.getNetworkAddresses();
+        if (nwadd.length > 0){
+            controller = ArtnetControllerFactory.getInstance(nwadd[0], 6454);
+        }
     }
 
 
-    public void sendData() throws MalformedArtnetPacketException {
+    private void sendData() throws MalformedArtnetPacketException {
         byte sequence = 0;
         byte physical = 0;
         byte subUni = 0;
@@ -88,7 +89,7 @@ public class DmxProManagerTest implements ArtnetPacketListener {
         }
     }
 
-    public void fade() throws MalformedArtnetPacketException {
+    private void fade() throws MalformedArtnetPacketException {
         int rM = 1;
         int gM = 0;
         int bM = 0;

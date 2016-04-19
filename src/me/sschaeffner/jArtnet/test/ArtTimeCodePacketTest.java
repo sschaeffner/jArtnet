@@ -66,7 +66,7 @@ public class ArtTimeCodePacketTest {
         byte type = (byte)0b0010;
 
         ArtTimeCodePacket p = new ArtTimeCodePacket(frames, seconds, minutes, hours, type);
-        ArtnetController controller = ArtnetController.getInstance(false, false);
+        ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

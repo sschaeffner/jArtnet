@@ -80,7 +80,7 @@ public class ArtAddressPacketTest {
         byte command = (byte) 0x04;//AcLedLocate: flash front panel indicators rapidly
 
         ArtAddressPacket p = new ArtAddressPacket(netSwitch, shortName, longName, swIn, swOut, subSwitch, swVideo, command);
-        ArtnetController controller = ArtnetController.getInstance(false, false);
+        ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

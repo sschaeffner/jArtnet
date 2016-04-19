@@ -24,7 +24,8 @@ import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * An Art-Net Controller.
@@ -36,9 +37,6 @@ import java.util.Enumeration;
  */
 public class ArtnetController {
 
-    //singleton instance
-    private static ArtnetController instance;
-
     //controller style code
     private static final int STYLE_CODE = ArtnetStyleCodes.ST_CONTROLLER;
 
@@ -48,14 +46,17 @@ public class ArtnetController {
     //server socket to send and receive Art-Net packets with
     private final DatagramSocket socket;
 
-    //broadcast address
-    private BroadcastAddress broadcastAddress;
+    //host address
+    private NetworkAddress host;
+
+    //listening port
+    private int port;
 
     //receiver thread listening for Art-Net packets
     private final Thread receiverThread;
 
     //list of listeners for received Art-Net packets
-    private final ArrayList<ArtnetPacketListener> listeners;
+    private final Set<ArtnetPacketListener> listeners;
 
     //whether to ignore packets sent from this controller
     private boolean ignoreOwnPackets = true;
@@ -66,61 +67,49 @@ public class ArtnetController {
     /**
      * Constructs a new instance of this class.
      */
-    private ArtnetController(boolean enableBroadcast, boolean enableRecieverThread) throws IOException {
+    protected ArtnetController(NetworkAddress host, int port) throws IOException {
+        this.host = host;
+        this.port = port;
         this.nodes = new ArrayList<>();
-        this.listeners = new ArrayList<>();
-
-        if (enableBroadcast) {
-            BroadcastAddress[] bca = getBroadcastAddresses();
-            if (bca.length > 0) {
-                System.out.println("using " + bca[0]);
-                broadcastAddress = bca[0];
-            } else throw new IOException("cannot start ArtnetController: broadcast enabled but no broadcast address found");
-        } else {
-            this.broadcastAddress = null;
-        }
+        this.listeners = new HashSet<>();
 
         //open udp socket
         try {
-            socket = new DatagramSocket(ArtnetPacket.UDP_PORT);
+            socket = new DatagramSocket(new InetSocketAddress(this.host.getInterfaceAddress().getAddress(), this.port));
         } catch (SocketException e) {
             e.printStackTrace();
             throw new IOException("cannot start ArtnetController: cannot open socket");
         }
 
-        if (enableRecieverThread) {
-            //start receiver thread
-            this.receiverThread = new Thread(() -> {
-                try {
-                    System.out.println("Listening on " + InetAddress.getLocalHost().getHostAddress() + ":" + ArtnetPacket.UDP_PORT);
+        //start receiver thread
+        this.receiverThread = new Thread(() -> {
+            try {
+                System.out.println("Listening on " + host.getInterfaceAddress().getAddress() + ":" + this.port);
 
-                    byte[] receiveData = new byte[600];
-                    DatagramPacket receivePacket = new DatagramPacket(receiveData, 0, receiveData.length);
+                byte[] receiveData = new byte[600];
+                DatagramPacket receivePacket = new DatagramPacket(receiveData, 0, receiveData.length);
 
-                    while (running) {
-                        if (!socket.isClosed()) {
-                            try {
-                                socket.receive(receivePacket);
-                                byte[] data = receivePacket.getData();
-                                InetAddress sender = receivePacket.getAddress();
-                                int port = receivePacket.getPort();
-                                onPacketReceive(data, sender, port);
-                            } catch (SocketException e) {
-                                //do nothing as the socket is just closed
-                            } catch (MalformedArtnetPacketException e) {
-                                e.printStackTrace();
-                            }
+                while (running) {
+                    if (!socket.isClosed()) {
+                        try {
+                            socket.receive(receivePacket);
+                            byte[] data = receivePacket.getData();
+                            InetAddress packetSender = receivePacket.getAddress();
+                            int packetPort = receivePacket.getPort();
+                            onPacketReceive(data, packetSender, packetPort);
+                        } catch (SocketException e) {
+                            //do nothing as the socket is just closed
+                        } catch (MalformedArtnetPacketException e) {
+                            e.printStackTrace();
                         }
                     }
-
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
                 }
-            });
-            this.receiverThread.start();
-        } else {
-            this.receiverThread = null;
-        }
+
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
+        });
+        this.receiverThread.start();
     }
 
     /**
@@ -129,9 +118,6 @@ public class ArtnetController {
     public void discoverNodes() throws MalformedArtnetPacketException {
         ArtPollPacket pollPacket = new ArtPollPacket();
         broadcastPacket(pollPacket);
-
-        //answer itself
-        broadcastPacket(constructArtPollReplyPacket());
     }
 
     /**
@@ -140,7 +126,7 @@ public class ArtnetController {
      * @return an ArtPollReplyPacket matching this controller
      */
     private ArtPollReplyPacket constructArtPollReplyPacket() throws MalformedArtnetPacketException {
-        InetAddress address = broadcastAddress.getInterfaceAddress().getAddress();
+        InetAddress address = this.host.getInterfaceAddress().getAddress();
         byte versInfoH = (byte) 0;
         byte versInfoL = (byte) 1;
         byte netSwitch = 0, subSwitch = 0;
@@ -167,7 +153,7 @@ public class ArtnetController {
         byte style = STYLE_CODE;
         byte[] mac = new byte[6];
         try {
-            mac = broadcastAddress.getNetworkInterface().getHardwareAddress();
+            mac = this.host.getNetworkInterface().getHardwareAddress();
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -191,12 +177,7 @@ public class ArtnetController {
             if (nodeAddress != null) {
 
                 byte[] data = artnetPacket.getPacketBytes();
-                DatagramPacket packet = new DatagramPacket(data, data.length, nodeAddress, ArtnetPacket.UDP_PORT);
-                try {
-                    socket.send(packet);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                DatagramPacket packet = new DatagramPacket(data, data.length, nodeAddress, this.port);
             }
         }
     }
@@ -208,9 +189,9 @@ public class ArtnetController {
      */
     public void broadcastPacket(ArtnetPacket artnetPacket) throws MalformedArtnetPacketException {
         if (socket != null) {
-            if (broadcastAddress != null) {
+            if (host != null) {
                 byte[] data = artnetPacket.getPacketBytes();
-                DatagramPacket packet = new DatagramPacket(data, data.length, broadcastAddress.getBroadcastAddress(), ArtnetPacket.UDP_PORT);
+                DatagramPacket packet = new DatagramPacket(data, data.length, this.host.getBroadcastAddress(), this.port);
                 try {
                     socket.send(packet);
                 } catch (IOException e) {
@@ -222,43 +203,6 @@ public class ArtnetController {
         } else {
             System.err.println("no socket available to broadcast");
         }
-    }
-
-    /**
-     * Returns all available broadcast addresses.
-     *
-     * @return all available broadcast addresses
-     */
-    private BroadcastAddress[] getBroadcastAddresses() {
-        ArrayList<BroadcastAddress> bcAddresses = new ArrayList<>();
-
-        //iterate trough all network interfaces
-        try {
-            Enumeration<NetworkInterface> networkInterfaceEnumeration = NetworkInterface.getNetworkInterfaces();
-            while (networkInterfaceEnumeration.hasMoreElements()) {
-                NetworkInterface nwi = networkInterfaceEnumeration.nextElement();
-
-                //check whether the network interface is a loopback type interface
-                if (!nwi.isLoopback()) {
-
-                    //get the interface's addresses
-                    for (InterfaceAddress interfaceAddress : nwi.getInterfaceAddresses()) {
-
-                        //get the address's broadcast address
-                        InetAddress bcAddress = interfaceAddress.getBroadcast();
-
-                        //check if broadcast address is available
-                        if (bcAddress != null) {
-                            bcAddresses.add(new BroadcastAddress(nwi, interfaceAddress, bcAddress));
-                        }
-                    }
-                }
-            }
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-
-        return bcAddresses.toArray(new BroadcastAddress[bcAddresses.size()]);
     }
 
     /**
@@ -278,33 +222,44 @@ public class ArtnetController {
         }
 
         //ignore packets sent from this controller
-        if (!(ignoreOwnPackets && (broadcastAddress.equals(sender) || (localhost != null && localhost.equals(sender))))) {
+        if (!(ignoreOwnPackets && (this.host.getInterfaceAddress().getAddress().equals(sender) || (localhost != null && localhost.equals(sender))))) {
+
             ArtnetPacket artnetPacket = ArtnetOpCodes.fromBytes(bytes);
             if (artnetPacket != null) {
-
                 //if ArtPollReply is sent, add all new nodes to list
                 if (artnetPacket instanceof ArtPollReplyPacket) {
-                    ArtnetNode senderNode = isNodeRegistered(sender);
-
-                    if (senderNode == null) {
-                        //create new node and add it to the list
-                        ArtnetNode node = new ArtnetNode(sender, (ArtPollReplyPacket) artnetPacket);
-                        nodes.add(node);
-                        System.out.println("new node: " + node);
-                    } else {
-                        //update ArtnetNode information
-                        senderNode.setArtPollReplyPacket((ArtPollReplyPacket) artnetPacket);
-                    }
+                    handleArtPollReplyPackets((ArtPollReplyPacket) artnetPacket, sender);
                 } else {
-
                     //set sender node for other packets
                     ArtnetNode senderNode = getNodeFromInetAddress(sender);
-                    if (senderNode != null) artnetPacket.setSender(null);
+                    if (senderNode != null) artnetPacket.setSender(senderNode);
 
                     //inform listeners
                     listeners.forEach(listener -> listener.onArtnetPacketReceive(artnetPacket));
                 }
             }
+        }
+    }
+
+    /**
+     * Handles received ArtPollReply packets.
+     *
+     * Either adds a new node or updates the node's information.
+     *
+     * @param packet    ArtPollReply packet
+     * @param sender    the sender's InetAddress
+     */
+    private void handleArtPollReplyPackets(ArtPollReplyPacket packet, InetAddress sender) {
+        ArtnetNode senderNode = isNodeRegistered(sender);
+
+        if (senderNode == null) {
+            //create new node and add it to the list
+            ArtnetNode node = new ArtnetNode(sender, packet);
+            nodes.add(node);
+            System.out.println("new node: " + node);
+        } else {
+            //update ArtnetNode information
+            senderNode.setArtPollReplyPacket(packet);
         }
     }
 
@@ -384,69 +339,12 @@ public class ArtnetController {
         return listeners.remove(listener);
     }
 
+    /**
+     * Whether or not to ignore own packets.
+     *
+     * @param ignoreOwnPackets whether or not to ignore own packets
+     */
     public void setIgnoreOwnPackets(boolean ignoreOwnPackets) {
         this.ignoreOwnPackets = ignoreOwnPackets;
-    }
-
-    /**
-     * Returns a singleton instance of this class.
-     *
-     * @param enableBroadcast       whether or not an InetAddress for broadcasting should be searched for
-     * @param enableReceiverThread  whether or not the receiver thread should be enabled
-     * @return a singleton instance of this class
-     */
-    public static ArtnetController getInstance(boolean enableBroadcast, boolean enableReceiverThread) throws IOException {
-        if (instance == null) instance = new ArtnetController(enableBroadcast, enableReceiverThread);
-        return instance;
-    }
-
-    /**
-     * An InetAddress that is combined with its InterfaceAddress.
-     */
-    public class BroadcastAddress {
-        private final NetworkInterface networkInterface;
-        private final InterfaceAddress interfaceAddress;
-        private final InetAddress broadcastAddress;
-
-        /**
-         * Constructs a new instance of this class.
-         */
-        public BroadcastAddress(NetworkInterface networkInterface, InterfaceAddress interfaceAddress, InetAddress broadcastAddress) {
-            this.networkInterface = networkInterface;
-            this.interfaceAddress = interfaceAddress;
-            this.broadcastAddress = broadcastAddress;
-        }
-
-        @Override
-        public String toString() {
-            return "BroadcastAddress: " + interfaceAddress.getAddress().getHostAddress() + " => " + broadcastAddress.getHostAddress();
-        }
-
-        /**
-         * Returns the NetworkInterface.
-         *
-         * @return NetworkInterface instance
-         */
-        public NetworkInterface getNetworkInterface() {
-            return networkInterface;
-        }
-
-        /**
-         * Returns the InterfaceAddress.
-         *
-         * @return InterfaceAddress instance
-         */
-        public InterfaceAddress getInterfaceAddress() {
-            return interfaceAddress;
-        }
-
-        /**
-         * Returns the broadcast address.
-         *
-         * @return broadcast address
-         */
-        public InetAddress getBroadcastAddress() {
-            return broadcastAddress;
-        }
     }
 }

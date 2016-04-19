@@ -67,7 +67,7 @@ public class ArtIpProgReplyPacketTest {
 
         ArtIpProgReplyPacket p = new ArtIpProgReplyPacket(progIp, progSm, progPortHi, progPortLo, status);
 
-        ArtnetController controller = ArtnetController.getInstance(false, false);
+        ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 

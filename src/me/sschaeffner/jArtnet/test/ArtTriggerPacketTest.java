@@ -86,7 +86,7 @@ public class ArtTriggerPacketTest {
         byte[] data = new byte[1];
 
         ArtTriggerPacket p = new ArtTriggerPacket(oemCodeHi, oemCodeLo, key, subkey, data);
-        ArtnetController controller = ArtnetController.getInstance(false, false);
+        ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
     }
 
