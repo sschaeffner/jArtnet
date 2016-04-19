@@ -105,7 +105,7 @@ public class ArtAddressPacket extends ArtnetPacket {
     public static ArtAddressPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
         //check for minimum length
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1 + 1 + 18 + 64 + 4 + 4 + 1 + 1 + 1;
-        if (bytes.length != byteArrayLength) {
+        if (bytes.length < byteArrayLength) {
             throw new MalformedArtnetPacketException("cannot construct ArtAddressPacket from bytes: bytes length not compatible");
         }
 

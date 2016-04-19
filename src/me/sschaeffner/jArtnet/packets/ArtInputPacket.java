@@ -100,7 +100,7 @@ public class ArtInputPacket extends ArtnetPacket {
     public static ArtInputPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
         //check for correct length
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1+1 + 1+1 + 4;
-        if (bytes.length != byteArrayLength) {
+        if (bytes.length < byteArrayLength) {
             throw new MalformedArtnetPacketException("cannot construct ArtInputPacket from bytes: bytes length not compatible");
         }
 

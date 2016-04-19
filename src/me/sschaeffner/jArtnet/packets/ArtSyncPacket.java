@@ -58,7 +58,7 @@ public class ArtSyncPacket extends ArtnetPacket {
     public static ArtSyncPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
         //check for correct length
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1+1;
-        if (bytes.length != byteArrayLength) {
+        if (bytes.length < byteArrayLength) {
             throw new MalformedArtnetPacketException("cannot construct ArtSyncPacket from bytes: bytes length not compatible");
         }
 

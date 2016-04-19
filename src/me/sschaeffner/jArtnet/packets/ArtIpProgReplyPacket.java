@@ -111,7 +111,7 @@ public class ArtIpProgReplyPacket extends ArtnetPacket {
     public static ArtIpProgReplyPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
         //check for correct length
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1+1+1+1 + 4 + 4 + 2 + 1 + 7;
-        if (bytes.length != byteArrayLength) {
+        if (bytes.length < byteArrayLength) {
             throw new MalformedArtnetPacketException("cannot construct ArtIpProgReplyPacket from bytes: bytes length not compatible");
         }
 

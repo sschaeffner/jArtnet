@@ -273,7 +273,7 @@ public class ArtPollReplyPacket extends ArtnetPacket {
     public static ArtPollReplyPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
         //check for correct length
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 4 + 2 + 2 + 1+1 + 1+1 + 1 + 1 + 1+1 + 18 + 64 + 64 + 1+1 + 4 + 4+4 + 4+4 + 1 + 1 + 1 + 3 + 1 + 6 + 4 + 1 + 1 + 26;
-        if (bytes.length != byteArrayLength) {
+        if (bytes.length < byteArrayLength) {
             throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket from bytes: bytes length not compatible");
         }
 
