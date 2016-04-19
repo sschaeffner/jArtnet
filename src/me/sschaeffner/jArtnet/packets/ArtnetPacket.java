@@ -26,7 +26,7 @@ import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
  * @author sschaeffner
  */
 public abstract class ArtnetPacket {
-    static final byte protVerHi = 3;
+    static final byte protVerHi = 0;
     static final byte protVerLo = 14;
 
     public static final byte[] ID = new byte[]{'A', 'r', 't', '-', 'N', 'e', 't', 0x00};
