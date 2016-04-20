@@ -172,17 +172,39 @@ public class ArtnetController {
     }
 
     /**
+     * Returns an ArtPollReplyPacket to a given sender.
+     *
+     * Called upon receiving an ArtPollPacket.
+     *
+     * @param sender InetAddress to send the packet to
+     */
+    private void returnArtPollReplyPacket(InetAddress sender) throws MalformedArtnetPacketException {
+        byte[] data = constructArtPollReplyPacket().getPacketBytes();
+        DatagramPacket packet = new DatagramPacket(data, data.length, sender, this.port);
+        try {
+            socket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Sends an Art-Net packet to a single node.
      *
      * @param artnetPacket packet to send
      */
     public void unicastPacket(ArtnetPacket artnetPacket, ArtnetNode node) throws MalformedArtnetPacketException {
-        if (socket != null) {
+        if (socket != null && !socket.isClosed()) {
             InetAddress nodeAddress = node.getInetAddress();
             if (nodeAddress != null) {
 
                 byte[] data = artnetPacket.getPacketBytes();
                 DatagramPacket packet = new DatagramPacket(data, data.length, nodeAddress, this.port);
+                try {
+                    socket.send(packet);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -193,7 +215,7 @@ public class ArtnetController {
      * @param artnetPacket packet to send
      */
     public void broadcastPacket(ArtnetPacket artnetPacket) throws MalformedArtnetPacketException {
-        if (socket != null) {
+        if (socket != null && !socket.isClosed()) {
             if (host != null) {
                 byte[] data = artnetPacket.getPacketBytes();
                 DatagramPacket packet = new DatagramPacket(data, data.length, this.host.getBroadcastAddress(), this.port);
@@ -229,14 +251,17 @@ public class ArtnetController {
         //ignore packets sent from this controller
         if (!(ignoreOwnPackets && (this.host.getInterfaceAddress().getAddress().equals(sender) || (localhost != null && localhost.equals(sender))))) {
 
-            //ignore packets from wrong subnet
-            if (ipIsInHostSubnet(sender)) {
+            //ignore packets from wrong subnet or wrong port
+            if (ipIsInHostSubnet(sender) && port == this.port) {
 
                 ArtnetPacket artnetPacket = ArtnetOpCodes.fromBytes(bytes);
                 if (artnetPacket != null) {
-                    //if ArtPollReply is sent, add all new nodes to list
                     if (artnetPacket instanceof ArtPollReplyPacket) {
+                        //if ArtPollReply is sent, add all new nodes to list
                         handleArtPollReplyPackets((ArtPollReplyPacket) artnetPacket, sender);
+                    } else if (artnetPacket instanceof ArtPollPacket) {
+                        //if ArtPoll is sent, reply with ArtPollReply
+                        returnArtPollReplyPacket(sender);
                     } else {
                         //set sender node for other packets
                         ArtnetNode senderNode = getNodeFromInetAddress(sender);
