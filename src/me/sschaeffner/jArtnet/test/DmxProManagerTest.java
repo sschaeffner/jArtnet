@@ -47,10 +47,11 @@ public class DmxProManagerTest implements ArtnetPacketListener, ArtnetNodeListen
         }*/
         t.fade();
 
-        //t.controller.closeSocket();
+        t.controller.closeSocket();
     }
 
     private ArtnetController controller;
+    private byte sequence;
 
     private DmxProManagerTest() throws IOException {
         NetworkAddress[] nwadd = NetworkAddress.getNetworkAddresses();
@@ -79,11 +80,13 @@ public class DmxProManagerTest implements ArtnetPacketListener, ArtnetNodeListen
         }
         controller.addArtnetPacketListener(this);
         controller.addArtnetNodeDiscoveryListener(this);
+
+        sequence = 0;
     }
 
 
     private void sendData() throws MalformedArtnetPacketException {
-        byte sequence = 0;
+        byte sequence = this.sequence++;
         byte physical = 0;
         byte subUni = 0;
         byte net = 0;
@@ -91,6 +94,11 @@ public class DmxProManagerTest implements ArtnetPacketListener, ArtnetNodeListen
 
         ArtDmxPacket dmxPacket = new ArtDmxPacket(sequence, physical, subUni, net, data);
         controller.broadcastPacket(dmxPacket);
+        try {
+            Thread.sleep(23);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println("empty packet send");
     }
 
@@ -104,7 +112,7 @@ public class DmxProManagerTest implements ArtnetPacketListener, ArtnetNodeListen
             int g = Integer.valueOf(reader.readLine());
             System.out.print("b: ");
             int b = Integer.valueOf(reader.readLine());
-            ArtDmxPacket dmxPacket = new ArtDmxPacket((byte)0, (byte)0, (byte)0, (byte)0, new byte[]{(byte)r, (byte)g, (byte)b});
+            ArtDmxPacket dmxPacket = new ArtDmxPacket(this.sequence++, (byte)0, (byte)0, (byte)0, new byte[]{(byte)r, (byte)g, (byte)b});
             controller.broadcastPacket(dmxPacket);
 
             System.out.print("r: ");
@@ -132,10 +140,10 @@ public class DmxProManagerTest implements ArtnetPacketListener, ArtnetNodeListen
                 int r = i * rM;
                 int g = i * gM;
                 int b = i * bM;
-                ArtDmxPacket dmxPacket = new ArtDmxPacket((byte)0, (byte)0, (byte)0, (byte)0, new byte[]{(byte)r, (byte)g, (byte)b});
+                ArtDmxPacket dmxPacket = new ArtDmxPacket(this.sequence++, (byte)0, (byte)0, (byte)0, new byte[]{(byte)r, (byte)g, (byte)b});
                 controller.broadcastPacket(dmxPacket);
                 try {
-                    Thread.sleep(20);
+                    Thread.sleep(23);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -144,23 +152,22 @@ public class DmxProManagerTest implements ArtnetPacketListener, ArtnetNodeListen
                 int r = i * rM;
                 int g = i * gM;
                 int b = i * bM;
-                ArtDmxPacket dmxPacket = new ArtDmxPacket((byte)0, (byte)0, (byte)0, (byte)0, new byte[]{(byte)r, (byte)g, (byte)b});
+                ArtDmxPacket dmxPacket = new ArtDmxPacket(this.sequence++, (byte)0, (byte)0, (byte)0, new byte[]{(byte)r, (byte)g, (byte)b});
                 controller.broadcastPacket(dmxPacket);
                 try {
-                    Thread.sleep(20);
+                    Thread.sleep(23);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
-        ArtDmxPacket dmxPacket = new ArtDmxPacket((byte)0, (byte)0, (byte)0, (byte)0, new byte[]{(byte)0, (byte)0, (byte)0});
+        ArtDmxPacket dmxPacket = new ArtDmxPacket(this.sequence++, (byte)0, (byte)0, (byte)0, new byte[]{(byte)0, (byte)0, (byte)0});
         controller.broadcastPacket(dmxPacket);
     }
 
     @Override
     public void onArtnetPacketReceive(ArtnetPacketReceiveEvent event) {
         System.out.println("packet from: " + event.getReceivedPacket().getSender() + " -> " + event.getReceivedPacket());
-
     }
 
     @Override
