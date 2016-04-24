@@ -18,6 +18,7 @@
 package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.*;
+import me.sschaeffner.jArtnet.packets.ArtAddressPacket;
 import me.sschaeffner.jArtnet.packets.ArtDmxPacket;
 import me.sschaeffner.jArtnet.packets.ArtNzsPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
@@ -85,6 +86,7 @@ public class ArtNzsPacketTest {
         Assert.assertArrayEquals(data, p.getData());
     }
 
+    boolean received;
     @Test
     public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         byte sequence = (byte) 0x10;
@@ -97,7 +99,20 @@ public class ArtNzsPacketTest {
 
         ArtNzsPacket p = new ArtNzsPacket(sequence, startCode, subUni, net, lengthHi, length, data);
         ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
+        controller.addArtnetPacketListener(event -> {
+            if (event.getReceivedPacket() instanceof ArtNzsPacket) {
+                received = true;
+            }
+        });
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
+        received = false;
+        while (!received) {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Test

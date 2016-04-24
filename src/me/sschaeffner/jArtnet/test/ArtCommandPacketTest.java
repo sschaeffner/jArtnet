@@ -18,6 +18,7 @@
 package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.*;
+import me.sschaeffner.jArtnet.packets.ArtAddressPacket;
 import me.sschaeffner.jArtnet.packets.ArtCommandPacket;
 import me.sschaeffner.jArtnet.packets.ArtDiagDataPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
@@ -77,6 +78,8 @@ public class ArtCommandPacketTest {
         Assert.assertEquals(data, p.getMessageAsString());
     }
 
+    boolean received1;
+
     @Test
     public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         byte estaManHi = (byte) 0x00;
@@ -88,9 +91,23 @@ public class ArtCommandPacketTest {
 
         ArtCommandPacket p = new ArtCommandPacket(estaManHi, estaManLo, lengthHi, lengthLo, data);
         ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
+        controller.addArtnetPacketListener(event -> {
+            if (event.getReceivedPacket() instanceof ArtCommandPacket) {
+                received1 = true;
+            }
+        });
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
+        received1 = false;
+        while (!received1) {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
+    boolean received2;
     @Test
     public void sendPacketTest2() throws MalformedArtnetPacketException, IOException {
         byte estaManHi = (byte) 0x00;
@@ -98,7 +115,20 @@ public class ArtCommandPacketTest {
         String data = "SwoutText=Playback&";
         ArtCommandPacket p = new ArtCommandPacket(estaManHi, estaManLo, data);
         ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
+        controller.addArtnetPacketListener(event -> {
+            if (event.getReceivedPacket() instanceof ArtCommandPacket) {
+                received2 = true;
+            }
+        });
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
+        received2 = false;
+        while (!received2) {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Test

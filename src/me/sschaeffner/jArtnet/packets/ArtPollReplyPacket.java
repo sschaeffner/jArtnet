@@ -140,6 +140,7 @@ public class ArtPollReplyPacket extends ArtnetPacket {
         this.swRemote = swRemote;
         this.style = style;
 
+        if (mac == null) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: mac is null");
         if (mac.length != 6) throw new MalformedArtnetPacketException("cannot construct ArtPollReplyPacket: mac has to be 6 bytes long");
         this.mac = mac;
 

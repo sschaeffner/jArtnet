@@ -24,6 +24,7 @@ import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -162,6 +163,7 @@ public class ArtnetController {
         } catch (SocketException e) {
             e.printStackTrace();
         }
+        if (mac == null) mac = new byte[6];
         byte[] bindIp = new byte[]{0, 0, 0, 0};
         byte bindIndex = 0;
         byte status2 = 0b00001110;
@@ -182,7 +184,7 @@ public class ArtnetController {
         byte[] data = constructArtPollReplyPacket().getPacketBytes();
         DatagramPacket packet = new DatagramPacket(data, data.length, sender, this.port);
         try {
-            socket.send(packet);
+            if (!socket.isClosed()) socket.send(packet);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -267,6 +269,8 @@ public class ArtnetController {
                         ArtnetNode senderNode = getNodeFromInetAddress(sender);
                         if (senderNode != null) artnetPacket.setSender(senderNode);
 
+                        System.out.println("RX: " + artnetPacket);
+
                         //inform packetListeners
                         packetListeners.forEach(listener -> listener.onArtnetPacketReceive(new ArtnetPacketReceiveEvent(artnetPacket)));
                     }
@@ -282,12 +286,18 @@ public class ArtnetController {
      * @return          whether a given InetAddress is in the host's subnet.
      */
     private boolean ipIsInHostSubnet(InetAddress address) {
-        byte[] hostAddr = host.getBroadcastAddress().getAddress();
-        byte[] cmpAddr = address.getAddress();
 
-        for (int i = 0; i < 4; i++) {
-            if (hostAddr[i] != (byte)255) {
-                if (hostAddr[i] != cmpAddr[i]) return false;
+        //null when in test mode listening on the loopback interface
+        InetAddress bcAddress = host.getBroadcastAddress();
+
+        if (bcAddress != null) {
+            byte[] hostAddr = bcAddress.getAddress();
+            byte[] cmpAddr = address.getAddress();
+
+            for (int i = 0; i < 4; i++) {
+                if (hostAddr[i] != (byte)255) {
+                    if (hostAddr[i] != cmpAddr[i]) return false;
+                }
             }
         }
 

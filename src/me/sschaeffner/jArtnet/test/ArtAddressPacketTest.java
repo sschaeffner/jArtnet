@@ -20,6 +20,7 @@ package me.sschaeffner.jArtnet.test;
 import me.sschaeffner.jArtnet.*;
 import me.sschaeffner.jArtnet.packets.ArtAddressPacket;
 import me.sschaeffner.jArtnet.packets.ArtCommandPacket;
+import me.sschaeffner.jArtnet.packets.ArtTriggerPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.After;
 import org.junit.Assert;
@@ -68,6 +69,7 @@ public class ArtAddressPacketTest {
         System.out.println(p);
     }
 
+    boolean received;
     @Test
     public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         byte netSwitch = (byte)0x42;
@@ -83,7 +85,21 @@ public class ArtAddressPacketTest {
 
         ArtAddressPacket p = new ArtAddressPacket(netSwitch, shortName, longName, swIn, swOut, subSwitch, swVideo, command);
         ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
+        controller.addArtnetPacketListener(event -> {
+            if (event.getReceivedPacket() instanceof ArtAddressPacket) {
+                received = true;
+            }
+        });
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
+
+        received = false;
+        while (!received) {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Test

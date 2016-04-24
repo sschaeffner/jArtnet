@@ -18,6 +18,7 @@
 package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.*;
+import me.sschaeffner.jArtnet.packets.ArtAddressPacket;
 import me.sschaeffner.jArtnet.packets.ArtPollPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.Assert;
@@ -96,6 +97,7 @@ public class ArtPollPacketTest {
         Assert.assertEquals(pOrig.getPriority(), p.getPriority());
     }
 
+    boolean received;
     @Test
     public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         ArtPollPacket p = new ArtPollPacket();

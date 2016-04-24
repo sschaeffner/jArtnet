@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Arrays;
 
 /**
  * @author sschaeffner
@@ -44,7 +45,7 @@ public class ArtTriggerPacketTest {
         byte oemCodeHi = (byte) 0xff;
         byte key = (byte) 0x00;//key ascii
         byte subkey = (byte) 'h';
-        byte[] data = new byte[1];
+        byte[] data = new byte[512];
 
         ArtTriggerPacket pOrig = new ArtTriggerPacket(oemCodeHi, oemCodeLo, key, subkey, data);
         byte[] bytes = pOrig.getPacketBytes();
@@ -79,17 +80,33 @@ public class ArtTriggerPacketTest {
         System.out.println(p);
     }
 
+    boolean received;
+
     @Test
     public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         byte oemCodeLo = (byte) 0xff;
         byte oemCodeHi = (byte) 0xff;
         byte key = (byte) 0x00;//key ascii
         byte subkey = (byte) 'h';
-        byte[] data = new byte[1];
+        String data = "hello world";
 
         ArtTriggerPacket p = new ArtTriggerPacket(oemCodeHi, oemCodeLo, key, subkey, data);
         ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
+        controller.addArtnetPacketListener(event -> {
+            if (event.getReceivedPacket() instanceof ArtTriggerPacket) {
+                received = true;
+            }
+        });
         controller.unicastPacket(p, new ArtnetNode(InetAddress.getLoopbackAddress(), ArtnetStyleCodes.ST_CONTROLLER, "loopback", "loopback"));
+
+        received = false;
+        while (!received) {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Test
@@ -98,7 +115,7 @@ public class ArtTriggerPacketTest {
         byte oemCodeHi = (byte) 0xff;
         byte key = (byte) 0x00;//key ascii
         byte subkey = (byte) 'h';
-        byte[] data = new byte[1];
+        byte[] data = new byte[512];
 
         ArtTriggerPacket pOrig = new ArtTriggerPacket(oemCodeHi, oemCodeLo, key, subkey, data);
         byte[] bytes = pOrig.getPacketBytes();

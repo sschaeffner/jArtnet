@@ -18,6 +18,7 @@
 package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.*;
+import me.sschaeffner.jArtnet.packets.ArtAddressPacket;
 import me.sschaeffner.jArtnet.packets.ArtPollReplyPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.Assert;
@@ -142,6 +143,7 @@ public class ArtPollReplyPacketTest {
         System.out.println(p);
     }
 
+    boolean received;
     @Test
     public void sendPacketTest() throws MalformedArtnetPacketException, IOException {
         InetAddress address = InetAddress.getLoopbackAddress();

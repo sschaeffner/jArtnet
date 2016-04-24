@@ -51,7 +51,7 @@ public class ArtTriggerPacket extends ArtnetPacket {
         this.key = key;
         this.subKey = subKey;
 
-        if (data.length > 512) throw new MalformedArtnetPacketException("Cannot construct ArtTriggerPacket: data too long");
+        if (data.length != 512) throw new MalformedArtnetPacketException("Cannot construct ArtTriggerPacket: data has to be 512 byte long");
         this.data = data;
     }
 
@@ -72,7 +72,10 @@ public class ArtTriggerPacket extends ArtnetPacket {
         this.subKey = subKey;
 
         if (data.length() > 511) throw new MalformedArtnetPacketException("Cannot construct ArtTriggerPacket: data too long");
-        this.data = stringToAsciiArrayNullTerminated(data);
+        byte[] dataAsAsciiArray = stringToAsciiArrayNullTerminated(data);
+        if (dataAsAsciiArray.length > 512) throw new MalformedArtnetPacketException("Cannot construct ArtTriggerPacket: data too long");
+        this.data = new byte[512];
+        System.arraycopy(dataAsAsciiArray, 0, this.data, 0, dataAsAsciiArray.length);
     }
 
     @Override
@@ -107,9 +110,9 @@ public class ArtTriggerPacket extends ArtnetPacket {
 
     public static ArtTriggerPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
         //check for minimum length
-        int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1+1 + 1 + 1 + 1;
+        int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1+1 + 1 + 1 + 512;
         if (bytes.length < byteArrayLength) {
-            throw new MalformedArtnetPacketException("cannot construct ArtTriggerPacket from bytes: bytes length not compatible");
+            throw new MalformedArtnetPacketException("cannot construct ArtTriggerPacket from bytes: too short");
         }
 
         //check for correct opcode
@@ -135,31 +138,28 @@ public class ArtTriggerPacket extends ArtnetPacket {
         byte rKey = bytes[14];
         byte rSubKey = bytes[15];
 
-        int lengthI = 0;
+
+        int lengthData = 16;
         for (int i = 16; i < bytes.length; i++) {
-            if (bytes[i] == (byte) 0x00) lengthI = i - 15;
+            if (bytes[i] == (byte) 0x00) {
+                lengthData = i - 15;
+                break;
+            }
         }
 
-        byte[] data = new byte[lengthI];
-        if (bytes.length >= lengthI + 16) {
-            System.arraycopy(bytes, 16, data, 0, lengthI);
+        byte[] data = new byte[512];
+        if (bytes.length >= 512 + 15) {
+            System.arraycopy(bytes, 16, data, 0, lengthData);
         } else {
             throw new MalformedArtnetPacketException("cannot construct ArtTriggerPacket from bytes: data too short (is " + (bytes.length - 16)
-                    + "; should be " + lengthI + ")");
+                    + "; should be " + lengthData + ")");
         }
 
         return new ArtTriggerPacket(rOemCodeHi, rOemCodeLo, rKey, rSubKey, data);
     }
 
     public String getMessageAsString() {
-        String message = "";
-
-        byte[] data = getData();
-        for (int i = 0; i < data.length && data[i] != 0; i++) {
-            message += (char) data[i];
-        }
-
-        return message;
+        return asString(data);
     }
 
     /**

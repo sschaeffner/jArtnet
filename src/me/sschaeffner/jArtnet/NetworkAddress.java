@@ -94,10 +94,6 @@ public class NetworkAddress {
                 if (nwi.isLoopback()) {
                     //get the interface's addresses
                     for (InterfaceAddress interfaceAddress : nwi.getInterfaceAddresses()) {
-
-                        //get the address's broadcast address
-                        InetAddress bcAddress = interfaceAddress.getBroadcast();
-
                         return new NetworkAddress(nwi, interfaceAddress);
                     }
                 }
@@ -106,7 +102,7 @@ public class NetworkAddress {
             e.printStackTrace();
         }
 
-        return null;
+        throw new IllegalStateException("cannot find loopback address");
     }
 
     @Override
