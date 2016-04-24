@@ -36,21 +36,21 @@ public class ArtnetStyleCodes {
     public static String toName(byte code) {
         switch (code) {
             case ST_NODE:
-                return "node";
+                return "NODE";
             case ST_CONTROLLER:
-                return "controller";
+                return "CONTROLLER";
             case ST_MEDIA:
-                return "media";
+                return "MEDIA";
             case ST_ROUTE:
-                return "route";
+                return "ROUTE";
             case ST_BACKUP:
-                return "backup";
+                return "BACKUP";
             case ST_CONFIG:
-                return "config";
+                return "CONFIG";
             case ST_VISUAL:
-                return "visual";
+                return "VISUAL";
             default:
-                throw new IllegalArgumentException("0x" + Integer.toHexString(code) + " is an unknown style code.");
+                return "UNKNOWN";
         }
     }
 }

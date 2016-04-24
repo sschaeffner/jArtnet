@@ -55,6 +55,8 @@ public class ArtIpProgReplyPacketTest {
         Assert.assertEquals(progPortHi, p.getProgPortHi());
         Assert.assertEquals(progPortLo, p.getProgPortLo());
         Assert.assertEquals(status, p.getStatus());
+
+        System.out.println(p);
     }
 
     @Test

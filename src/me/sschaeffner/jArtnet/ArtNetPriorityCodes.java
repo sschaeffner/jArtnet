@@ -30,4 +30,21 @@ public class ArtNetPriorityCodes {
     public static final byte DP_HIGH = (byte) 0x80;
     public static final byte DP_CRITICAL = (byte) 0xE0;
     public static final byte DP_VOLATILE = (byte) 0xF0;
+
+    public static String asString(byte b) {
+        switch (b) {
+            case DP_LOW:
+                return "DP_LOW";
+            case DP_MID:
+                return "DP_MID";
+            case DP_HIGH:
+                return "DP_HIGH";
+            case DP_CRITICAL:
+                return "DP_CRITICAL";
+            case DP_VOLATILE:
+                return "DP_VOLATILE";
+            default:
+                return "UNKNOWN";
+        }
+    }
 }

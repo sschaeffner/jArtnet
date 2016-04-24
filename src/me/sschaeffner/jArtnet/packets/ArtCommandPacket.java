@@ -20,6 +20,8 @@ package me.sschaeffner.jArtnet.packets;
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
+import java.util.Arrays;
+
 /**
  * An implementation of the ArtCommand packet as defined by the Art-Net standard.
  *
@@ -179,6 +181,10 @@ public class ArtCommandPacket extends ArtnetPacket {
         return estaManLo;
     }
 
+    public int getEstaMan() {
+        return (Byte.toUnsignedInt(getEstaManHi()) << 8) + Byte.toUnsignedInt(getEstaManLo());
+    }
+
     public byte getLengthHi() {
         return lengthHi;
     }
@@ -187,7 +193,20 @@ public class ArtCommandPacket extends ArtnetPacket {
         return lengthLo;
     }
 
+    public int getLength() {
+        return (Byte.toUnsignedInt(getLengthHi()) << 8) + Byte.toUnsignedInt(getLengthLo());
+    }
+
     public byte[] getData() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        return "ArtCommandPacket{" +
+                "estaMan=" + asHex(getEstaMan(), 4) +
+                ", length=" + getLength() +
+                ", data=" + asString(data) +
+                '}';
     }
 }

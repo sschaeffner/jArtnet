@@ -131,4 +131,15 @@ public class ArtTimeCodePacket extends ArtnetPacket {
     public byte getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "ArtTimeCodePacket{" +
+                "frames=" + Byte.toUnsignedInt(frames) +
+                ", seconds=" + Byte.toUnsignedInt(seconds) +
+                ", minutes=" + Byte.toUnsignedInt(minutes) +
+                ", hours=" + Byte.toUnsignedInt(hours) +
+                ", type=" + asHex(type) +
+                '}';
+    }
 }

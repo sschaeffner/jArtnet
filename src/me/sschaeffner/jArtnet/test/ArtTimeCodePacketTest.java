@@ -55,6 +55,8 @@ public class ArtTimeCodePacketTest {
         Assert.assertEquals(minutes, p.getMinutes());
         Assert.assertEquals(hours, p.getHours());
         Assert.assertEquals(type, p.getType());
+
+        System.out.println(p);
     }
 
     @Test

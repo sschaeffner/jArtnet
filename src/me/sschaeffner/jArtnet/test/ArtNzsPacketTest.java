@@ -60,6 +60,8 @@ public class ArtNzsPacketTest {
         Assert.assertEquals(lengthHi, p.getLengthHi());
         Assert.assertEquals(length, p.getLength());
         Assert.assertArrayEquals(data, p.getData());
+
+        System.out.println(p);
     }
 
     @Test

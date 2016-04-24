@@ -20,6 +20,8 @@ package me.sschaeffner.jArtnet.packets;
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
+import java.util.Arrays;
+
 /**
  * An implementation of the ArtIpProgReply packet as defined by the Art-Net standard.
  *
@@ -158,7 +160,21 @@ public class ArtIpProgReplyPacket extends ArtnetPacket {
         return progPortLo;
     }
 
+    public int getProgPort() {
+        return (Byte.toUnsignedInt(getProgPortHi()) << 8) + Byte.toUnsignedInt(getProgPortLo());
+    }
+
     public byte getStatus() {
         return status;
+    }
+
+    @Override
+    public String toString() {
+        return "ArtIpProgReplyPacket{" +
+                "progIp=" + asIP(progIp) +
+                ", progSm=" + asIP(progSm) +
+                ", progPort=" + getProgPort() +
+                ", status=" + asHex(status) +
+                '}';
     }
 }

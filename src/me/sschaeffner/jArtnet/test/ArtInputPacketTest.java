@@ -50,6 +50,8 @@ public class ArtInputPacketTest {
         Assert.assertEquals(numPortsHi, p.getNumPortsHi());
         Assert.assertEquals(numPortsLo, p.getNumPortsLo());
         Assert.assertArrayEquals(input, p.getInput());
+
+        System.out.println(p);
     }
 
     @Test

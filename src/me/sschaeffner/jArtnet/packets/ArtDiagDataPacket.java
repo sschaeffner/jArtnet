@@ -17,8 +17,11 @@
  */
 package me.sschaeffner.jArtnet.packets;
 
+import me.sschaeffner.jArtnet.ArtNetPriorityCodes;
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
+
+import java.util.Arrays;
 
 /**
  * An implementation of the ArtDiagData packet as defined by the Art-Net standard.
@@ -181,6 +184,10 @@ public class ArtDiagDataPacket extends ArtnetPacket {
         return lengthLo;
     }
 
+    public int getLength() {
+        return (Byte.toUnsignedInt(getLengthHi()) << 8) + Byte.toUnsignedInt(getLengthLo());
+    }
+
     public byte[] getData() {
         return data;
     }
@@ -210,5 +217,14 @@ public class ArtDiagDataPacket extends ArtnetPacket {
         }
 
         return ascii;
+    }
+
+    @Override
+    public String toString() {
+        return "ArtDiagDataPacket{" +
+                "priority=" + ArtNetPriorityCodes.asString(getPriority()) +
+                ", length=" + getLength() +
+                ", data=" + asString(data) +
+                '}';
     }
 }

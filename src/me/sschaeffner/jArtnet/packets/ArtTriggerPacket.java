@@ -20,6 +20,8 @@ package me.sschaeffner.jArtnet.packets;
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
+import java.util.Arrays;
+
 /**
  * An implementation of the ArtTrigger packet as defined by the Art-Net standard.
  *
@@ -184,6 +186,10 @@ public class ArtTriggerPacket extends ArtnetPacket {
         return oemCodeLo;
     }
 
+    public int getOemCode() {
+        return (Byte.toUnsignedInt(getOemCodeHi()) << 8) + Byte.toUnsignedInt(getOemCodeLo());
+    }
+
     public byte getKey() {
         return key;
     }
@@ -194,5 +200,15 @@ public class ArtTriggerPacket extends ArtnetPacket {
 
     public byte[] getData() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        return "ArtTriggerPacket{" +
+                "oemCodeHi=" + asHex(getOemCode(), 4) +
+                ", key=" + asHex(key) +
+                ", subKey=" + asHex(subKey) +
+                ", data=" + asString(data) +
+                '}';
     }
 }

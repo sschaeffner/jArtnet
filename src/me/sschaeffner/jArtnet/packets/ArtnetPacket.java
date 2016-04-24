@@ -62,4 +62,107 @@ public abstract class ArtnetPacket {
     public static ArtnetPacket fromBytes(byte[] bytes) throws MalformedArtnetPacketException {
         throw new MalformedArtnetPacketException("Subclass has not implemented fromBytes() method.");
     }
+
+    /**
+     * Returns a null terminated ASCII byte array as a String.
+     *
+     * @param bytes a null terminated ASCII byte array
+     * @return      null terminated ASCII byte array as String
+     */
+    String asString(byte[] bytes) {
+        String s = "";
+        for (int i = 0; i < bytes.length && bytes[i] != 0; i++) s += (char)bytes[i];
+        return s;
+    }
+
+    /**
+     * Returns a byte as a hex formatted unsigned integer string.
+     *
+     * Adds a 0 in front of the hex number if it is shorter than 2 characters.
+     *
+     * @param b a byte
+     * @return  the byte as a hex formatted unsigned integer string
+     */
+    String asHex(byte b) {
+        String s = Integer.toHexString(Byte.toUnsignedInt(b)) + "";
+        if (s.length() <= 1) s = "0" + s;
+        return "0x" + s;
+    }
+
+    /**
+     * Returns an int as a hex formatted unsigned integer string.
+     * @param i an int
+     * @return  the int as a hex formatted unsigned integer string.
+     */
+    String asHex(int i) {
+        return "0x" + Integer.toHexString(i);
+    }
+
+    /**
+     * Returns an int as a hex formatted unsigned integer string with a certain length
+     * @param i         an int
+     * @param length    supposed length
+     * @return          the int as a hex formatted unsigned integer string
+     */
+    String asHex(int i, int length) {
+        String h = Integer.toHexString(i);
+        while (h.length() < length) {
+            h = "0" + h;
+        }
+        return "0x" + h;
+    }
+
+    /**
+     * Returns a byte array as a hex formatted unsigned integer string
+     * @param bytes a byte array
+     * @return      the byte array as a hex formatted unsigned integer string
+     */
+    String asHexArray(byte[] bytes) {
+        String s = "[";
+        for (int i = 0; i < bytes.length; i++) {
+            if (i != 0) s += ", ";
+            s += asHex(bytes[i]);
+        }
+        s += "]";
+        return s;
+    }
+
+    /**
+     * Returns a byte array as an IP formatted string.
+     * @param bytes a byte array
+     * @return      the byte array as an IP formatted string
+     */
+    String asIP(byte[] bytes) {
+        if (bytes.length == 4) {
+            String s = "";
+            for (int i = 0; i < 4; i++) {
+                s += Byte.toUnsignedInt(bytes[i]);
+                if (i != 3) s += ".";
+            }
+            return s;
+        } else {
+            return "NOT.AN.IP";
+        }
+    }
+
+    /**
+     * Returns a byte array as a mac address formatted string.
+     * @param bytes a byte array
+     * @return      the byte array as a mac address formatted string
+     */
+    String asMac(byte[] bytes) {
+        if (bytes.length == 6) {
+            String s = "";
+            for (int i = 0; i < 6; i++){
+                String part = Integer.toHexString(Byte.toUnsignedInt(bytes[i])) + "";
+                if (part.length() <= 1) part = "0" + part;
+                s += part;
+
+                if (i != 5) s+= ":";
+            }
+            return s;
+        } else {
+            return "not.a.mac.address";
+        }
+    }
 }

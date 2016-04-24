@@ -20,6 +20,8 @@ package me.sschaeffner.jArtnet.packets;
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
+import java.util.Arrays;
+
 /**
  * An implementation of the ArtInput packet as defined by the Art-Net standard.
  *
@@ -143,5 +145,14 @@ public class ArtInputPacket extends ArtnetPacket {
 
     public byte[] getInput() {
         return input;
+    }
+
+    @Override
+    public String toString() {
+        return "ArtInputPacket{" +
+                "numPortsHi=" + asHex(numPortsHi) +
+                ", numPortsLo=" + asHex(numPortsLo) +
+                ", input=" + asHexArray(input) +
+                '}';
     }
 }

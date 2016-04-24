@@ -18,10 +18,12 @@
 package me.sschaeffner.jArtnet.packets;
 
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
+import me.sschaeffner.jArtnet.ArtnetStyleCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 /**
  * An implementation of the ArtPollReply packet as defined by the Art-Net standard.
@@ -374,6 +376,10 @@ public class ArtPollReplyPacket extends ArtnetPacket {
         return versInfoL;
     }
 
+    public int getVersInfo() {
+        return (Byte.toUnsignedInt(getVersInfoH()) << 8) + Byte.toUnsignedInt(getVersInfoL());
+    }
+
     public byte getNetSwitch() {
         return netSwitch;
     }
@@ -388,6 +394,10 @@ public class ArtPollReplyPacket extends ArtnetPacket {
 
     public byte getOem() {
         return oem;
+    }
+
+    public int getOemInt() {
+        return (Byte.toUnsignedInt(getOemHi()) << 8) + Byte.toUnsignedInt(getOem());
     }
 
     public byte getUbeaVersion() {
@@ -407,7 +417,7 @@ public class ArtPollReplyPacket extends ArtnetPacket {
     }
 
     public int getEstaMan() {
-        return ((estaManHi & 0xFF) << 8) + (estaManLo & 0xFF);
+        return (Byte.toUnsignedInt(getEstaManHi()) << 8) + Byte.toUnsignedInt(getEstaManLo());
     }
 
     public byte[] getShortName() {
@@ -428,6 +438,10 @@ public class ArtPollReplyPacket extends ArtnetPacket {
 
     public byte getNumPortsLo() {
         return numPortsLo;
+    }
+
+    public int getNumPorts() {
+        return (Byte.toUnsignedInt(getNumPortsHi()) << 8) + Byte.toUnsignedInt(getNumPortsLo());
     }
 
     public byte[] getPortTypes() {
@@ -480,5 +494,36 @@ public class ArtPollReplyPacket extends ArtnetPacket {
 
     public byte getStatus2() {
         return status2;
+    }
+
+    @Override
+    public String toString() {
+        return "ArtPollReplyPacket{" +
+                "address=" + address +
+                ", versInfo=" + asHex(getVersInfo(), 4) +
+                ", netSwitch=" + asHex(netSwitch) +
+                ", subSwitch=" + asHex(subSwitch) +
+                ", oem=" + asHex(getOemInt(), 4) +
+                ", ubeaVersion=" + asHex(ubeaVersion) +
+                ", status1=" + asHex(status1) +
+                ", estaMan=" + asHex(getEstaMan(), 4) +
+                ", shortName=" + asString(shortName) +
+                ", longName=" + asString(longName) +
+                ", nodeReport=" + asString(nodeReport) +
+                ", numPorts=" + getNumPorts() +
+                ", portTypes=" + asHexArray(portTypes) +
+                ", goodInput=" + asHexArray(goodInput) +
+                ", goodOutput=" + asHexArray(goodOutput) +
+                ", swIn=" + asHexArray(swIn) +
+                ", swOut=" + asHexArray(swOut) +
+                ", swVideo=" + asHex(swVideo) +
+                ", swMacro=" + asHex(swMacro) +
+                ", swRemote=" + asHex(swRemote) +
+                ", style=" + ArtnetStyleCodes.toName(style) +
+                ", mac=" + asMac(mac) +
+                ", bindIp=" + asIP(bindIp) +
+                ", bindIndex=" + asHex(bindIndex) +
+                ", status2=" + asHex(status2) +
+                '}';
     }
 }

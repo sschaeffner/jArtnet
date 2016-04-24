@@ -138,6 +138,8 @@ public class ArtPollReplyPacketTest {
         Assert.assertArrayEquals(bindIp, p.getBindIp());
         Assert.assertEquals(bindIndex, p.getBindIndex());
         Assert.assertEquals(status2, p.getStatus2());
+
+        System.out.println(p);
     }
 
     @Test

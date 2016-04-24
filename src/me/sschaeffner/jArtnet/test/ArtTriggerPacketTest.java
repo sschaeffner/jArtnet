@@ -75,6 +75,8 @@ public class ArtTriggerPacketTest {
         Assert.assertEquals(key, p.getKey());
         Assert.assertEquals(subKey, p.getSubKey());
         Assert.assertEquals(data, p.getMessageAsString());
+
+        System.out.println(p);
     }
 
     @Test

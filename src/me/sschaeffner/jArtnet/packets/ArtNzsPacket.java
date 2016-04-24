@@ -20,6 +20,8 @@ package me.sschaeffner.jArtnet.packets;
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
+import java.util.Arrays;
+
 /**
  * An implementation of the ArtNzs packet as defined by the Art-Net standard.
  *
@@ -187,7 +189,23 @@ public class ArtNzsPacket extends ArtnetPacket {
         return length;
     }
 
+    public int getLengthInt() {
+        return (Byte.toUnsignedInt(getLengthHi()) << 8) + Byte.toUnsignedInt(getLength());
+    }
+
     public byte[] getData() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        return "ArtNzsPacket{" +
+                "sequence=" + asHex(sequence) +
+                ", startCode=" + asHex(startCode) +
+                ", subUni=" + asHex(subUni) +
+                ", net=" + asHex(net) +
+                ", lengthI=" + getLengthInt() +
+                ", data=" + asHexArray(data) +
+                '}';
     }
 }

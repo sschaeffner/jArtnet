@@ -80,4 +80,9 @@ public class ArtSyncPacket extends ArtnetPacket {
 
         return new ArtSyncPacket();
     }
+
+    @Override
+    public String toString() {
+        return "ArtSyncPacket{}";
+    }
 }

@@ -53,6 +53,8 @@ public class ArtDiagDataPacketTest {
         Assert.assertEquals(pOrig.getLengthLo(), p.getLengthLo());
         Assert.assertArrayEquals(pOrig.getData(), p.getData());
         Assert.assertEquals(pOrig.getMessageAsString(), p.getMessageAsString());
+
+        System.out.println(p);
     }
 
     @Test

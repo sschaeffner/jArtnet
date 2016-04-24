@@ -58,6 +58,8 @@ public class ArtCommandPacketTest {
         Assert.assertEquals(lengthHi, p.getLengthHi());
         Assert.assertEquals(lengthLo, p.getLengthLo());
         Assert.assertArrayEquals(data, p.getData());
+
+        System.out.println(p);
     }
 
     @Test

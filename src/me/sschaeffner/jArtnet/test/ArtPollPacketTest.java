@@ -46,7 +46,7 @@ public class ArtPollPacketTest {
         Assert.assertEquals(32, b[9]);
 
         //lo version
-        Assert.assertEquals(3, b[10]);
+        Assert.assertEquals(0, b[10]);
         //hi version
         Assert.assertEquals(14, b[11]);
 
@@ -55,6 +55,8 @@ public class ArtPollPacketTest {
 
         //priority (0xE0)
         Assert.assertEquals(ArtNetPriorityCodes.DP_LOW, b[13] & 0xFF);
+
+        System.out.println(p);
     }
 
     @Test
@@ -72,7 +74,7 @@ public class ArtPollPacketTest {
         Assert.assertEquals(32, b[9]);
 
         //lo version
-        Assert.assertEquals(3, b[10]);
+        Assert.assertEquals(0, b[10]);
         //hi version
         Assert.assertEquals(14, b[11]);
 

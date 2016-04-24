@@ -64,6 +64,8 @@ public class ArtAddressPacketTest {
         Assert.assertEquals(subSwitch, p.getSubSwitch());
         Assert.assertEquals(swVideo, p.getSwVideo());
         Assert.assertEquals(command, p.getCommand());
+
+        System.out.println(p);
     }
 
     @Test

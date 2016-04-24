@@ -42,6 +42,8 @@ public class ArtSyncPacketTest {
         ArtSyncPacket pOrig = new ArtSyncPacket();
         byte[] data = pOrig.getPacketBytes();
         ArtSyncPacket p = ArtSyncPacket.fromBytes(data);
+
+        System.out.println(p);
     }
 
     @Test

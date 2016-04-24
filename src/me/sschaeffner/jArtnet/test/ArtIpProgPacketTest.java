@@ -58,6 +58,8 @@ public class ArtIpProgPacketTest {
         Assert.assertArrayEquals(progSm, p.getProgSm());
         Assert.assertEquals(progPortHi, p.getProgPortHi());
         Assert.assertEquals(progPortLo, p.getProgPortLo());
+
+        System.out.println(p);
     }
 
     @Test

@@ -56,6 +56,8 @@ public class ArtDmxPacketTest {
         Assert.assertEquals(pOrig.getLengthHi(), p.getLengthHi());
         Assert.assertEquals(pOrig.getLength(), p.getLength());
         Assert.assertArrayEquals(pOrig.getData(), p.getData());
+
+        System.out.println(p);
     }
 
     @Test

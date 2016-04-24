@@ -128,4 +128,12 @@ public class ArtPollPacket extends ArtnetPacket {
     public byte getPriority() {
         return priority;
     }
+
+    @Override
+    public String toString() {
+        return "ArtPollPacket{" +
+                "talkToMe=" + asHex(talkToMe) +
+                ", priority=" + ArtNetPriorityCodes.asString(priority) +
+                '}';
+    }
 }
