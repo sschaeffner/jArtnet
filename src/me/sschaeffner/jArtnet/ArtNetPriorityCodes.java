@@ -18,11 +18,11 @@
 package me.sschaeffner.jArtnet;
 
 /**
- * A collection of all Priority Codes of the Art-Net 3 specification.
+ * A collection of all Priority Codes defined by the Art-Net 3 specification.
  *
  * These codes are used in ArtPoll and ArtDiagData packages.
  *
- * @author sschaeffner
+ * Art-Net specification page 36.
  */
 public class ArtNetPriorityCodes {
     public static final byte DP_LOW = (byte) 0x10;

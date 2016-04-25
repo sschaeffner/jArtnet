@@ -18,14 +18,19 @@
 package me.sschaeffner.jArtnet;
 
 /**
- * An event that is fired upod discovery of a new Artnet node.
+ * An event that is fired upon discovery of a new ArtnetNode.
  *
  * @author sschaeffner
  */
 public class ArtnetNodeDiscoveryEvent {
     private ArtnetNode newNode;
 
-    protected ArtnetNodeDiscoveryEvent(ArtnetNode newNode) {
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param newNode the newly discovered node
+     */
+    ArtnetNodeDiscoveryEvent(ArtnetNode newNode) {
         this.newNode = newNode;
     }
 

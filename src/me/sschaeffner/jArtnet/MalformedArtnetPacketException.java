@@ -18,11 +18,18 @@
 package me.sschaeffner.jArtnet;
 
 /**
+ * An Exception that is triggered when an error regarding ArtnetPackets occurs.
+ *
  * @author sschaeffner
  */
 public class MalformedArtnetPacketException extends Exception {
     private final String detailMessage;
 
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param detailMessage a detailed message describing the exception
+     */
     public MalformedArtnetPacketException(String detailMessage) {
         this.detailMessage = detailMessage;
     }

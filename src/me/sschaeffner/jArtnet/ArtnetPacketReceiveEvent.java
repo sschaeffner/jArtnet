@@ -20,14 +20,19 @@ package me.sschaeffner.jArtnet;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 
 /**
- * An event that is triggered upon receiving a new Artnet packet.
+ * An event that is triggered upon receiving a new ArtnetPacket.
  *
  * @author sschaeffner
  */
 public class ArtnetPacketReceiveEvent {
     private ArtnetPacket receivedPacket;
 
-    public ArtnetPacketReceiveEvent(ArtnetPacket receivedPacket) {
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param receivedPacket the newly received packet.
+     */
+    ArtnetPacketReceiveEvent(ArtnetPacket receivedPacket) {
         this.receivedPacket = receivedPacket;
     }
 

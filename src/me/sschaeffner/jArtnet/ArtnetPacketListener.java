@@ -18,14 +18,16 @@
 package me.sschaeffner.jArtnet;
 
 /**
+ * A listener for ArtnetPacketReceiveEvents.
+ *
  * @author sschaeffner
  */
 public interface ArtnetPacketListener {
 
     /**
-     * Called upon receiving an Art-Net packet.
+     * Called upon receiving an ArtnetPacket.
      *
-     * @param event event for the received Art-Net packet
+     * @param event event for the received ArtnetPacket
      */
     void onArtnetPacketReceive(ArtnetPacketReceiveEvent event);
 }

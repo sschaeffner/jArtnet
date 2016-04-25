@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * Factory class for ArtnetController.
+ * Factory for ArtnetController.
  *
  * @author sschaeffner
  */

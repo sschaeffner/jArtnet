@@ -18,11 +18,11 @@
 package me.sschaeffner.jArtnet;
 
 /**
- * A collection of all NodeReport Codes of the Art-Net 3 specification.
+ * A collection of all NodeReport Codes defined by the Art-Net 3 specification.
  *
- * These Codes are used in ArtPollReply packages.
+ * These Codes are used in ArtPollReply packets.
  *
- * @author sschaeffner
+ * Art-Net specification page 18.
  */
 public class ArtnetNodeReportCodes {
     public static final int RC_DEBUG = 0x0000;

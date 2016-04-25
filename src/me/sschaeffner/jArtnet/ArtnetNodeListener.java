@@ -18,13 +18,15 @@
 package me.sschaeffner.jArtnet;
 
 /**
+ * A listener for ArtnetNodeDiscoveryEvents.
+ *
  * @author sschaeffner
  */
 public interface ArtnetNodeListener {
     /**
-     * Called upon discovery of a new Art-Net node.
+     * Called upon discovery of a new ArtnetNode.
      *
-     * @param event event for the newly discovered Art-Net node
+     * @param event event for the newly discovered ArtnetNode
      */
     void onArtnetNodeDiscovery(ArtnetNodeDiscoveryEvent event);
 }

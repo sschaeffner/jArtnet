@@ -35,6 +35,9 @@ public class NetworkAddress {
 
     /**
      * Constructs a new instance of this class.
+     *
+     * @param networkInterface  the NetworkAddress' network interface (physical)
+     * @param interfaceAddress  the NetworkAddress' interface address (ip/broadcast address)
      */
     public NetworkAddress(NetworkInterface networkInterface, InterfaceAddress interfaceAddress) {
         this.networkInterface = networkInterface;

@@ -32,7 +32,7 @@ import java.util.Set;
  * An Art-Net Controller.
  *
  * This is typically a lighting console.
- * May be used to send Art-Net packets.
+ * Used to send Art-Net packets.
  *
  * @author sschaeffner
  */

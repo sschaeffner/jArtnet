@@ -22,9 +22,11 @@ import me.sschaeffner.jArtnet.packets.*;
 import java.util.Arrays;
 
 /**
- * A collection of all OpCodes of the Art-Net 3 specification.
+ * A collection of all OpCodes defined by the Art-Net 3 specification.
  *
- * @author sschaeffner
+ * These codes are used in all ArtnetPackets.
+ *
+ * Art-Net specification pages 15/16.
  */
 public final class ArtnetOpCodes {
     //each opcode is 2 bytes long

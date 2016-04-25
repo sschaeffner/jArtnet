@@ -22,6 +22,8 @@ import me.sschaeffner.jArtnet.packets.ArtPollReplyPacket;
 import java.net.InetAddress;
 
 /**
+ * Representation of an Art-Net node.
+ *
  * @author sschaeffner
  */
 public class ArtnetNode {
@@ -42,6 +44,8 @@ public class ArtnetNode {
      *
      * @param inetAddress   the node's address
      * @param styleCode     the node's styleCode
+     * @param shortName     the node's short name
+     * @param longName      the node's long name
      */
     public ArtnetNode(InetAddress inetAddress, byte styleCode, String shortName, String longName) {
         this.inetAddress = inetAddress;

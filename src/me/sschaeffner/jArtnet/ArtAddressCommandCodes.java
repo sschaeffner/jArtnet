@@ -18,7 +18,11 @@
 package me.sschaeffner.jArtnet;
 
 /**
- * @author sschaeffner
+ * A collection of all node configuration commands defined by the Art-Net 3 specification.
+ *
+ * These codes are used in ArtAddress packets.
+ *
+ * Art-Net specification pages 33/34.
  */
 public class ArtAddressCommandCodes {
     public static final byte AC_NONE = (byte)0x00;

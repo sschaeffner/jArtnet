@@ -18,11 +18,11 @@
 package me.sschaeffner.jArtnet;
 
 /**
- * A collection of all Style Codes of the Art-Net 3 specification.
+ * A collection of all Style Codes defined by the Art-Net 3 specification.
  *
  * These Codes are used in ArtPollReply packages.
  *
- * @author sschaeffner
+ * Art-Net specification page 19.
  */
 public class ArtnetStyleCodes {
     public static final byte ST_NODE = 0x00;
