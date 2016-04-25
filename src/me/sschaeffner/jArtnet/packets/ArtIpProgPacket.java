@@ -35,7 +35,6 @@ public class ArtIpProgPacket extends ArtnetPacket {
     private final byte progPortHi;
     private final byte progPortLo;
 
-
     /**
      * Constructs a new instance of this class.
      *

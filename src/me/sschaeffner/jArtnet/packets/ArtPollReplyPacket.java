@@ -468,12 +468,24 @@ public class ArtPollReplyPacket extends ArtnetPacket {
         return shortName;
     }
 
+    public String getShortNameString() {
+        return asString(shortName);
+    }
+
     public byte[] getLongName() {
         return longName;
     }
 
+    public String getLongNameString() {
+        return asString(longName);
+    }
+
     public byte[] getNodeReport() {
         return nodeReport;
+    }
+
+    public String getNodeReportString() {
+        return asString(nodeReport);
     }
 
     public byte getNumPortsHi() {
@@ -551,9 +563,9 @@ public class ArtPollReplyPacket extends ArtnetPacket {
                 ", ubeaVersion=" + asHex(ubeaVersion) +
                 ", status1=" + asHex(status1) +
                 ", estaMan=" + asHex(getEstaMan(), 4) +
-                ", shortName=" + asString(shortName) +
-                ", longName=" + asString(longName) +
-                ", nodeReport=" + asString(nodeReport) +
+                ", shortName=" + getShortNameString() +
+                ", longName=" + getLongNameString() +
+                ", nodeReport=" + getNodeReportString() +
                 ", numPorts=" + getNumPorts() +
                 ", portTypes=" + asHexArray(portTypes) +
                 ", goodInput=" + asHexArray(goodInput) +

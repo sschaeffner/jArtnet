@@ -28,12 +28,12 @@ import java.util.Arrays;
  * @author sschaeffner
  */
 public class ArtCommandPacket extends ArtnetPacket {
+
     private final byte estaManHi;
     private final byte estaManLo;
     private final byte lengthHi;
     private final byte lengthLo;
     private final byte[] data;
-
 
     /**
      * Constructs a new instance of this class.
@@ -163,10 +163,6 @@ public class ArtCommandPacket extends ArtnetPacket {
         return new ArtCommandPacket(rEstaManHi, rEstaManLo, rLengthHi, rLengthLo, data);
     }
 
-    public String getMessageAsString() {
-        return asString(this.data);
-    }
-
     public byte getEstaManHi() {
         return estaManHi;
     }
@@ -195,12 +191,16 @@ public class ArtCommandPacket extends ArtnetPacket {
         return data;
     }
 
+    public String getDataString() {
+        return asString(this.data);
+    }
+
     @Override
     public String toString() {
         return "ArtCommandPacket{" +
                 "estaMan=" + asHex(getEstaMan(), 4) +
                 ", length=" + getLength() +
-                ", data=" + asString(data) +
+                ", data=" + getDataString() +
                 '}';
     }
 }

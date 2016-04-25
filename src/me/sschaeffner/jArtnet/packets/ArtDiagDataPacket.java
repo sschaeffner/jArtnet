@@ -30,14 +30,10 @@ import java.util.Arrays;
  */
 public class ArtDiagDataPacket extends ArtnetPacket {
 
-    private static final byte protVerHi = 3;
-    private static final byte protVerLo = 14;
-
     private final byte priority;
     private final byte lengthHi;
     private final byte lengthLo;
     private final byte[] data;
-
 
     /**
      * Constructs a new instance of this class.
@@ -186,31 +182,8 @@ public class ArtDiagDataPacket extends ArtnetPacket {
         return data;
     }
 
-    public String getMessageAsString() {
-        String message = "";
-
-        byte[] data = getData();
-        for (int i = 0; i < data.length && data[i] != 0; i++) {
-            message += (char) data[i];
-        }
-
-        return message;
-    }
-
-    /**
-     * Translates a String into an ascii array with a null termination.
-     *
-     * @param message   String to translate
-     * @return          message as ascii array with null termination
-     */
-    public static byte[] stringToAsciiArrayNullTerminated(String message) {
-        char[] chars = message.toCharArray();
-        byte[] ascii = new byte[chars.length + 1];//null termination
-        for (int i = 0; i < chars.length; i++) {
-            ascii[i] = (byte) chars[i];
-        }
-
-        return ascii;
+    public String getDataString() {
+        return asString(data);
     }
 
     @Override
@@ -218,7 +191,7 @@ public class ArtDiagDataPacket extends ArtnetPacket {
         return "ArtDiagDataPacket{" +
                 "priority=" + ArtNetPriorityCodes.asString(getPriority()) +
                 ", length=" + getLength() +
-                ", data=" + asString(data) +
+                ", data=" + getDataString() +
                 '}';
     }
 }

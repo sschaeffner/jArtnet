@@ -204,13 +204,17 @@ public class ArtTriggerPacket extends ArtnetPacket {
         return data;
     }
 
+    public String getDataString() {
+        return asString(data);
+    }
+
     @Override
     public String toString() {
         return "ArtTriggerPacket{" +
                 "oemCodeHi=" + asHex(getOemCode(), 4) +
                 ", key=" + asHex(key) +
                 ", subKey=" + asHex(subKey) +
-                ", data=" + asString(data) +
+                ", data=" + getDataString() +
                 '}';
     }
 }

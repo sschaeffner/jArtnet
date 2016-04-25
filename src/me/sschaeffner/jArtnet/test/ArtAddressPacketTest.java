@@ -19,8 +19,6 @@ package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.*;
 import me.sschaeffner.jArtnet.packets.ArtAddressPacket;
-import me.sschaeffner.jArtnet.packets.ArtCommandPacket;
-import me.sschaeffner.jArtnet.packets.ArtTriggerPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.After;
 import org.junit.Assert;
@@ -85,8 +83,8 @@ public class ArtAddressPacketTest {
         ArtAddressPacket p = ArtAddressPacket.fromBytes(bytes);
 
         Assert.assertEquals(netSwitch, p.getNetSwitch());
-        Assert.assertEquals(shortName, p.getShortNameAsString());
-        Assert.assertEquals(longName, p.getLongNameAsString());
+        Assert.assertEquals(shortName, p.getShortNameString());
+        Assert.assertEquals(longName, p.getLongNameString());
         Assert.assertArrayEquals(swIn, p.getSwIn());
         Assert.assertArrayEquals(swOut, p.getSwOut());
         Assert.assertEquals(subSwitch, p.getSubSwitch());

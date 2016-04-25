@@ -20,8 +20,6 @@ package me.sschaeffner.jArtnet.packets;
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
-import java.util.Arrays;
-
 /**
  * An implementation of the ArtAddress packet as defined by the Art-Net standard.
  *
@@ -163,7 +161,7 @@ public class ArtAddressPacket extends ArtnetPacket {
         return shortName;
     }
 
-    public String getShortNameAsString() {
+    public String getShortNameString() {
         return asString(getShortName());
     }
 
@@ -171,7 +169,7 @@ public class ArtAddressPacket extends ArtnetPacket {
         return longName;
     }
 
-    public String getLongNameAsString() {
+    public String getLongNameString() {
         return asString(getLongName());
     }
 
@@ -199,8 +197,8 @@ public class ArtAddressPacket extends ArtnetPacket {
     public String toString() {
         return "ArtAddressPacket{" +
                 "netSwitch=" + asHex(netSwitch) +
-                ", shortName=" + getShortNameAsString() +
-                ", longName=" + getLongNameAsString() +
+                ", shortName=" + getShortNameString() +
+                ", longName=" + getLongNameString() +
                 ", swIn=" + asHexArray(swIn) +
                 ", swOut=" + asHexArray(swOut) +
                 ", subSwitch=" + asHex(subSwitch) +

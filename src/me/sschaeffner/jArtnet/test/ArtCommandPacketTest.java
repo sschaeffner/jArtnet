@@ -18,9 +18,7 @@
 package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.*;
-import me.sschaeffner.jArtnet.packets.ArtAddressPacket;
 import me.sschaeffner.jArtnet.packets.ArtCommandPacket;
-import me.sschaeffner.jArtnet.packets.ArtDiagDataPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.After;
 import org.junit.Assert;
@@ -75,7 +73,7 @@ public class ArtCommandPacketTest {
 
         Assert.assertEquals(estaManHi, p.getEstaManHi());
         Assert.assertEquals(estaManLo, p.getEstaManLo());
-        Assert.assertEquals(data, p.getMessageAsString());
+        Assert.assertEquals(data, p.getDataString());
     }
 
     @Test
@@ -91,7 +89,7 @@ public class ArtCommandPacketTest {
 
         Assert.assertEquals(estaManHi, p.getEstaManHi());
         Assert.assertEquals(estaManLo, p.getEstaManLo());
-        Assert.assertEquals(data, p.getMessageAsString());
+        Assert.assertEquals(data, p.getDataString());
     }
 
     boolean received1;

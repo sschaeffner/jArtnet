@@ -18,7 +18,6 @@
 package me.sschaeffner.jArtnet.test;
 
 import me.sschaeffner.jArtnet.*;
-import me.sschaeffner.jArtnet.packets.ArtAddressPacket;
 import me.sschaeffner.jArtnet.packets.ArtDiagDataPacket;
 import me.sschaeffner.jArtnet.packets.ArtnetPacket;
 import org.junit.After;
@@ -41,7 +40,7 @@ public class ArtDiagDataPacketTest {
     @Test
     public void constructionTest() throws MalformedArtnetPacketException {
         byte priority = ArtNetPriorityCodes.DP_CRITICAL;
-        byte[] data = ArtDiagDataPacket.stringToAsciiArrayNullTerminated("Important Message");
+        byte[] data = ArtnetPacket.asASCIIArrayNullTerminated("Important Message");
         byte lengthHi = (byte) (data.length >> 8);
         byte lengthLo = (byte) data.length;
 
@@ -53,7 +52,7 @@ public class ArtDiagDataPacketTest {
         Assert.assertEquals(pOrig.getLengthHi(), p.getLengthHi());
         Assert.assertEquals(pOrig.getLengthLo(), p.getLengthLo());
         Assert.assertArrayEquals(pOrig.getData(), p.getData());
-        Assert.assertEquals(pOrig.getMessageAsString(), p.getMessageAsString());
+        Assert.assertEquals(pOrig.getDataString(), p.getDataString());
 
         System.out.println(p);
     }
@@ -61,7 +60,7 @@ public class ArtDiagDataPacketTest {
     @Test
     public void constructionTest2() throws MalformedArtnetPacketException {
         byte priority = ArtNetPriorityCodes.DP_CRITICAL;
-        byte[] data = ArtDiagDataPacket.stringToAsciiArrayNullTerminated("Important Message");
+        byte[] data = ArtnetPacket.asASCIIArrayNullTerminated("Important Message");
         byte lengthHi = (byte) (data.length >> 8);
         byte lengthLo = (byte) data.length;
 
@@ -73,7 +72,7 @@ public class ArtDiagDataPacketTest {
         Assert.assertEquals(pOrig.getLengthHi(), p.getLengthHi());
         Assert.assertEquals(pOrig.getLengthLo(), p.getLengthLo());
         Assert.assertArrayEquals(pOrig.getData(), p.getData());
-        Assert.assertEquals(pOrig.getMessageAsString(), p.getMessageAsString());
+        Assert.assertEquals(pOrig.getDataString(), p.getDataString());
     }
 
     boolean received;
@@ -100,7 +99,7 @@ public class ArtDiagDataPacketTest {
     @Test
     public void opCodeRecognitionTest() throws MalformedArtnetPacketException {
         byte priority = ArtNetPriorityCodes.DP_CRITICAL;
-        byte[] data = ArtDiagDataPacket.stringToAsciiArrayNullTerminated("Important Message");
+        byte[] data = ArtnetPacket.asASCIIArrayNullTerminated("Important Message");
         byte lengthHi = (byte) (data.length >> 8);
         byte lengthLo = (byte) data.length;
 
