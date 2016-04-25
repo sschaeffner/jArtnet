@@ -20,8 +20,6 @@ package me.sschaeffner.jArtnet.packets;
 import me.sschaeffner.jArtnet.ArtnetOpCodes;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
-import java.util.Arrays;
-
 /**
  * An implementation of the ArtTrigger packet as defined by the Art-Net standard.
  *
@@ -66,16 +64,20 @@ public class ArtTriggerPacket extends ArtnetPacket {
      * @throws MalformedArtnetPacketException when data is too long
      */
     public ArtTriggerPacket(byte oemCodeHi, byte oemCodeLo, byte key, byte subKey, String data) throws MalformedArtnetPacketException {
-        this.oemCodeHi = oemCodeHi;
-        this.oemCodeLo = oemCodeLo;
-        this.key = key;
-        this.subKey = subKey;
+        this(oemCodeHi, oemCodeLo, key, subKey, asASCIIArrayNullTerminated(data, 512));
+    }
 
-        if (data.length() > 511) throw new MalformedArtnetPacketException("Cannot construct ArtTriggerPacket: data too long");
-        byte[] dataAsAsciiArray = stringToAsciiArrayNullTerminated(data);
-        if (dataAsAsciiArray.length > 512) throw new MalformedArtnetPacketException("Cannot construct ArtTriggerPacket: data too long");
-        this.data = new byte[512];
-        System.arraycopy(dataAsAsciiArray, 0, this.data, 0, dataAsAsciiArray.length);
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param oemCode   the oem code
+     * @param key       the trigger key
+     * @param subKey    the trigger subkey
+     * @param data      additional data
+     * @throws MalformedArtnetPacketException when data is too long
+     */
+    public ArtTriggerPacket(int oemCode, byte key, byte subKey, String data) throws MalformedArtnetPacketException {
+        this((byte)(oemCode >> 8), (byte)oemCode, key, subKey, asASCIIArrayNullTerminated(data, 512));
     }
 
     @Override

@@ -60,6 +60,29 @@ public class ArtIpProgReplyPacketTest {
         System.out.println(p);
     }
 
+    @Test
+    public void constructionTest2() throws MalformedArtnetPacketException {
+        byte[] progIp = new byte[]{(byte)192, (byte)168, (byte)0, (byte)10};
+        byte[] progSm = new byte[]{(byte)255, (byte)255, (byte)0, (byte)0};
+        byte progPortHi = (byte) 0x19;
+        byte progPortLo = (byte) 0x36;
+        int progPort = 6454;
+        byte status = (byte) 0b01000000;
+
+        ArtIpProgReplyPacket pOrig = new ArtIpProgReplyPacket(progIp, progSm, progPort, status);
+        byte[] bytes = pOrig.getPacketBytes();
+
+        ArtIpProgReplyPacket p = ArtIpProgReplyPacket.fromBytes(bytes);
+
+        Assert.assertArrayEquals(progIp, p.getProgIp());
+        Assert.assertArrayEquals(progSm, p.getProgSm());
+        Assert.assertEquals(progPortHi, p.getProgPortHi());
+        Assert.assertEquals(progPortLo, p.getProgPortLo());
+        Assert.assertEquals(status, p.getStatus());
+
+        System.out.println(p);
+    }
+
     boolean received;
     @Test
     public void sendPacketTest() throws MalformedArtnetPacketException, IOException {

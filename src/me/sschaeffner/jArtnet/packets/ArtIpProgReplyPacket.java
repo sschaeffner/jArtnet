@@ -43,9 +43,9 @@ public class ArtIpProgReplyPacket extends ArtnetPacket {
      * @param progPortHi    high byte of the port used by the node
      * @param progPortLo    low byte of the port used by the node
      * @param status        Bit 6: DHCP enabled
-     * @throws MalformedArtnetPacketException
+     * @throws MalformedArtnetPacketException when ip or subnetmask do not have the correct length
      */
-    public ArtIpProgReplyPacket( byte[] progIp, byte[] progSm, byte progPortHi, byte progPortLo, byte status) throws MalformedArtnetPacketException {
+    public ArtIpProgReplyPacket(byte[] progIp, byte[] progSm, byte progPortHi, byte progPortLo, byte status) throws MalformedArtnetPacketException {
         if (progIp.length != 4) throw new MalformedArtnetPacketException("Cannot construct ArtIpProgReplyPacket: wrong progIp length");
         this.progIp = progIp;
 
@@ -55,6 +55,19 @@ public class ArtIpProgReplyPacket extends ArtnetPacket {
         this.progPortHi = progPortHi;
         this.progPortLo = progPortLo;
         this.status = status;
+    }
+
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param progIp        IP address of node
+     * @param progSm        subnet mask of node
+     * @param progPort      the port used by the node
+     * @param status        Bit 6: DHCP enabled
+     * @throws MalformedArtnetPacketException when ip or subnetmask do not have the correct length
+     */
+    public ArtIpProgReplyPacket(byte[] progIp, byte[] progSm, int progPort, byte status) throws MalformedArtnetPacketException {
+        this(progIp, progSm, (byte)(progPort >> 8), (byte)progPort, status);
     }
 
     @Override

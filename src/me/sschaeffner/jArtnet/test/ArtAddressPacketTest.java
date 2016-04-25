@@ -69,6 +69,31 @@ public class ArtAddressPacketTest {
         System.out.println(p);
     }
 
+    @Test
+    public void constructionTest2() throws MalformedArtnetPacketException {
+        byte netSwitch = (byte)0x42;
+        String shortName = "hello world";
+        String longName = "a long name";
+        byte[] swIn = new byte[]{(byte)0x0A, (byte)0x0B, (byte)0x0C, (byte)0x0D};
+        byte[] swOut = new byte[]{(byte)0x0E, (byte)0x0F, (byte)0x01, (byte)0x02};
+        byte subSwitch = (byte) 0x21;
+        byte swVideo = (byte) 0x00;
+        byte command = ArtAddressCommandCodes.AC_LED_LOCATE;
+
+        ArtAddressPacket pOrig = new ArtAddressPacket(netSwitch, shortName, longName, swIn, swOut, subSwitch, swVideo, command);
+        byte[] bytes = pOrig.getPacketBytes();
+        ArtAddressPacket p = ArtAddressPacket.fromBytes(bytes);
+
+        Assert.assertEquals(netSwitch, p.getNetSwitch());
+        Assert.assertEquals(shortName, p.getShortNameAsString());
+        Assert.assertEquals(longName, p.getLongNameAsString());
+        Assert.assertArrayEquals(swIn, p.getSwIn());
+        Assert.assertArrayEquals(swOut, p.getSwOut());
+        Assert.assertEquals(subSwitch, p.getSubSwitch());
+        Assert.assertEquals(swVideo, p.getSwVideo());
+        Assert.assertEquals(command, p.getCommand());
+    }
+
     boolean received;
     @Test
     public void sendPacketTest() throws MalformedArtnetPacketException, IOException {

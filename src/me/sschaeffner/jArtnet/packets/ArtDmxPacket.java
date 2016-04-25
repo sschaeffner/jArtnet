@@ -70,17 +70,7 @@ public class ArtDmxPacket extends ArtnetPacket {
      * @throws MalformedArtnetPacketException when data is too long
      */
     public ArtDmxPacket(byte sequence, byte physical, byte subUni, byte net, byte[] data) throws MalformedArtnetPacketException {
-        this.sequence = sequence;
-        this.physical = physical;
-        this.subUni = subUni;
-        this.net = net;
-        int length = data.length;
-        this.lengthHi = (byte)((length >>> 8) & 0xFF);
-        this.length = (byte)(length & 0xFF);
-        this.data = data;
-        if (data.length > 512) {
-            throw new MalformedArtnetPacketException("Cannot construct ArtDmxPacket: data too long");
-        }
+        this(sequence, physical, subUni, net, (byte)(data.length >> 8), (byte)data.length, data);
     }
 
     /**

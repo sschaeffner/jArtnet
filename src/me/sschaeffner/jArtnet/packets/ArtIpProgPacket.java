@@ -44,7 +44,7 @@ public class ArtIpProgPacket extends ArtnetPacket {
      * @param progSm        subnet mask to be programmed into the node if enabled by command
      * @param progPortHi    high byte of the port to be programmed into the node if enabled by command
      * @param progPortLo    low byte of the port to be programmed into the node if enabled by command
-     * @throws MalformedArtnetPacketException
+     * @throws MalformedArtnetPacketException when ip or subnetmask do not have the correct length
      */
     public ArtIpProgPacket(byte command, byte[] progIp, byte[] progSm, byte progPortHi, byte progPortLo) throws MalformedArtnetPacketException {
         this.command = command;
@@ -57,6 +57,19 @@ public class ArtIpProgPacket extends ArtnetPacket {
 
         this.progPortHi = progPortHi;
         this.progPortLo = progPortLo;
+    }
+
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param command       actions of this packet
+     * @param progIp        IP address to be programmed into the node if enabled by command
+     * @param progSm        subnet mask to be programmed into the node if enabled by command
+     * @param progPort      the port to be programmed into the node if enabled by command
+     * @throws MalformedArtnetPacketException when ip or subnetmask do not have the correct length
+     */
+    public ArtIpProgPacket(byte command, byte[] progIp, byte[] progSm, int progPort) throws MalformedArtnetPacketException {
+        this(command, progIp, progSm, (byte)(progPort >> 8), (byte)progPort);
     }
 
 

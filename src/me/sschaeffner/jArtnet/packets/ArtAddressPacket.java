@@ -72,6 +72,13 @@ public class ArtAddressPacket extends ArtnetPacket {
         this.command = command;
     }
 
+    public ArtAddressPacket(byte netSwitch, String shortName, String longName, byte[] swIn, byte[] swOut,
+                            byte subSwitch, byte swVideo, byte command) throws MalformedArtnetPacketException {
+        this(netSwitch, asASCIIArrayNullTerminated(shortName, 18), asASCIIArrayNullTerminated(longName, 64), swIn, swOut,
+                subSwitch, swVideo, command);
+
+    }
+
     @Override
     public byte[] getPacketBytes() throws MalformedArtnetPacketException {
         int byteArrayLength = ArtnetPacket.ID.length + 2 + 1+1 + 1 + 1 + 18 + 64 + 4 + 4 + 1 + 1 + 1;

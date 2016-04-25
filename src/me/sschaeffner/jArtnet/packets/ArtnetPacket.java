@@ -69,7 +69,7 @@ public abstract class ArtnetPacket {
      * @param bytes a null terminated ASCII byte array
      * @return      null terminated ASCII byte array as String
      */
-    String asString(byte[] bytes) {
+    public static String asString(byte[] bytes) {
         String s = "";
         for (int i = 0; i < bytes.length && bytes[i] != 0; i++) s += (char)bytes[i];
         return s;
@@ -83,7 +83,7 @@ public abstract class ArtnetPacket {
      * @param b a byte
      * @return  the byte as a hex formatted unsigned integer string
      */
-    String asHex(byte b) {
+    public static String asHex(byte b) {
         String s = Integer.toHexString(Byte.toUnsignedInt(b)) + "";
         if (s.length() <= 1) s = "0" + s;
         return "0x" + s;
@@ -94,7 +94,7 @@ public abstract class ArtnetPacket {
      * @param i an int
      * @return  the int as a hex formatted unsigned integer string.
      */
-    String asHex(int i) {
+    public static String asHex(int i) {
         return "0x" + Integer.toHexString(i);
     }
 
@@ -104,7 +104,7 @@ public abstract class ArtnetPacket {
      * @param length    supposed length
      * @return          the int as a hex formatted unsigned integer string
      */
-    String asHex(int i, int length) {
+    public static String asHex(int i, int length) {
         String h = Integer.toHexString(i);
         while (h.length() < length) {
             h = "0" + h;
@@ -117,7 +117,7 @@ public abstract class ArtnetPacket {
      * @param bytes a byte array
      * @return      the byte array as a hex formatted unsigned integer string
      */
-    String asHexArray(byte[] bytes) {
+    public static String asHexArray(byte[] bytes) {
         String s = "[";
         for (int i = 0; i < bytes.length; i++) {
             if (i != 0) s += ", ";
@@ -132,7 +132,7 @@ public abstract class ArtnetPacket {
      * @param bytes a byte array
      * @return      the byte array as an IP formatted string
      */
-    String asIP(byte[] bytes) {
+    public static String asIP(byte[] bytes) {
         if (bytes.length == 4) {
             String s = "";
             for (int i = 0; i < 4; i++) {
@@ -150,7 +150,7 @@ public abstract class ArtnetPacket {
      * @param bytes a byte array
      * @return      the byte array as a mac address formatted string
      */
-    String asMac(byte[] bytes) {
+    public static String asMac(byte[] bytes) {
         if (bytes.length == 6) {
             String s = "";
             for (int i = 0; i < 6; i++){
@@ -164,5 +164,34 @@ public abstract class ArtnetPacket {
         } else {
             return "not.a.mac.address";
         }
+    }
+
+    /**
+     * Returns a String as a null terminated ASCII byte array.
+     * @param s a String
+     * @return  the String as a null terminated ASCII byte array
+     */
+    public static byte[] asASCIIArrayNullTerminated(String s) {
+        char[] cs = s.toCharArray();
+        byte[] chars = new byte[cs.length + 1];
+        for (int i = 0; i < cs.length; i++) {
+            chars[i] = (byte) cs[i];
+        }
+        return chars;
+    }
+
+    /**
+     * Returns a String as a null terminated ASCII byte array with a given fixed length.
+     * @param s             a String
+     * @param fixedLength   fixed length of the ASCII byte array
+     * @return              the String as a null terminated ASCII byte array
+     */
+    public static byte[] asASCIIArrayNullTerminated(String s, int fixedLength) {
+        char[] cs = s.toCharArray();
+        byte[] chars = new byte[fixedLength];
+        for (int i = 0; i < cs.length && i < fixedLength - 1; i++) {
+            chars[i] = (byte) cs[i];
+        }
+        return chars;
     }
 }

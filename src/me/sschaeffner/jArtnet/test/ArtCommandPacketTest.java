@@ -78,6 +78,22 @@ public class ArtCommandPacketTest {
         Assert.assertEquals(data, p.getMessageAsString());
     }
 
+    @Test
+    public void constructionTest3() throws MalformedArtnetPacketException {
+        byte estaManHi = (byte) 0xAA;
+        byte estaManLo = (byte) 0xFF;
+        int estaMan = 0xAAFF;
+        String data = "SwoutText=Playback&";
+        ArtCommandPacket pOrig = new ArtCommandPacket(estaMan, data);
+        byte[] bytes = pOrig.getPacketBytes();
+
+        ArtCommandPacket p = ArtCommandPacket.fromBytes(bytes);
+
+        Assert.assertEquals(estaManHi, p.getEstaManHi());
+        Assert.assertEquals(estaManLo, p.getEstaManLo());
+        Assert.assertEquals(data, p.getMessageAsString());
+    }
+
     boolean received1;
 
     @Test

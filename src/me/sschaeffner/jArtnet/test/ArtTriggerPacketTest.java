@@ -80,6 +80,27 @@ public class ArtTriggerPacketTest {
         System.out.println(p);
     }
 
+    @Test
+    public void constructionTest3() throws MalformedArtnetPacketException {
+        byte oemCodeHi = (byte) 0xFF;
+        byte oemCodeLo = (byte) 0x00;
+        int oemCode = 0xFF00;
+        byte key = (byte) 0x00;
+        byte subKey = (byte) 'h';
+        String data = "hello world";
+
+        ArtTriggerPacket pOrig = new ArtTriggerPacket(oemCode, key, subKey, data);
+        byte[] bytes = pOrig.getPacketBytes();
+        ArtTriggerPacket p = ArtTriggerPacket.fromBytes(bytes);
+
+        Assert.assertEquals(oemCodeHi, p.getOemCodeHi());
+        Assert.assertEquals(oemCodeLo, p.getOemCodeLo());
+        Assert.assertEquals(key, p.getKey());
+        Assert.assertEquals(subKey, p.getSubKey());
+        Assert.assertEquals(data, p.getMessageAsString());
+
+    }
+
     boolean received;
 
     @Test

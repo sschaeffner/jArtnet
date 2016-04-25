@@ -76,13 +76,7 @@ public class ArtDiagDataPacket extends ArtnetPacket {
      * @throws MalformedArtnetPacketException when message is too long
      */
     public ArtDiagDataPacket(byte priority, String message) throws MalformedArtnetPacketException {
-        this.priority = priority;
-        this.data = stringToAsciiArrayNullTerminated(message);
-        if (data.length > 512) {
-            throw new MalformedArtnetPacketException("Cannot construct ArtDiagDataPacket: data too long");
-        }
-        this.lengthHi = (byte) (this.data.length >> 8);
-        this.lengthLo = (byte) this.data.length;
+        this(priority, asASCIIArrayNullTerminated(message));
     }
 
     /**

@@ -42,7 +42,7 @@ public class ArtCommandPacket extends ArtnetPacket {
      * @param estaManLo low byte of the ESTA manufacturer code
      * @param lengthHi  high byte of the length of the data array
      * @param lengthLo  low byte of the length of the data array
-     * @param data      text command as a null terminated ASCII array
+     * @param data      text command as a null terminated ASCII byte array
      * @throws MalformedArtnetPacketException when data is too long
      */
     public ArtCommandPacket(byte estaManHi, byte estaManLo, byte lengthHi, byte lengthLo, byte[] data) throws MalformedArtnetPacketException {
@@ -60,17 +60,34 @@ public class ArtCommandPacket extends ArtnetPacket {
      *
      * @param estaManHi high byte of the ESTA manufacturer code
      * @param estaManLo low byte of the ESTA manufacturer code
+     * @param data      text command as null terminated ASCII byte array
+     * @throws MalformedArtnetPacketException when data is too long
+     */
+    public ArtCommandPacket(byte estaManHi, byte estaManLo, byte[] data) throws MalformedArtnetPacketException {
+        this(estaManHi, estaManLo, (byte)(data.length >> 8), (byte)data.length, data);
+    }
+
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param estaManHi high byte of the ESTA manufacturer code
+     * @param estaManLo low byte of the ESTA manufacturer code
      * @param data      text command as a String
      * @throws MalformedArtnetPacketException when data is too long
      */
     public ArtCommandPacket(byte estaManHi, byte estaManLo, String data) throws MalformedArtnetPacketException {
-        this.estaManHi = estaManHi;
-        this.estaManLo = estaManLo;
-        this.data = stringToAsciiArrayNullTerminated(data);
-        this.lengthHi = (byte)(this.data.length >> 8);
-        this.lengthLo = (byte)this.data.length;
+        this(estaManHi, estaManLo, asASCIIArrayNullTerminated(data));
+    }
 
-        if (this.data.length > 512) throw new MalformedArtnetPacketException("Cannot construct ArtCommandPacket: data too long");
+    /**
+     * Constructs a new instance of this class.
+     *
+     * @param estaMan   the ESTA manufacturer code
+     * @param data      text command as a String
+     * @throws MalformedArtnetPacketException when data is too long
+     */
+    public ArtCommandPacket(int estaMan, String data) throws MalformedArtnetPacketException {
+        this((byte)(estaMan >> 8), (byte)estaMan, data);
     }
 
     @Override
@@ -147,30 +164,7 @@ public class ArtCommandPacket extends ArtnetPacket {
     }
 
     public String getMessageAsString() {
-        String message = "";
-
-        byte[] data = getData();
-        for (int i = 0; i < data.length && data[i] != 0; i++) {
-            message += (char) data[i];
-        }
-
-        return message;
-    }
-
-    /**
-     * Translates a String into an ascii array with a null termination.
-     *
-     * @param message   String to translate
-     * @return          message as ascii array with null termination
-     */
-    public static byte[] stringToAsciiArrayNullTerminated(String message) {
-        char[] chars = message.toCharArray();
-        byte[] ascii = new byte[chars.length + 1];//null termination
-        for (int i = 0; i < chars.length; i++) {
-            ascii[i] = (byte) chars[i];
-        }
-
-        return ascii;
+        return asString(this.data);
     }
 
     public byte getEstaManHi() {
