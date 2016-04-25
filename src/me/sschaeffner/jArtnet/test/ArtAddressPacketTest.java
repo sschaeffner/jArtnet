@@ -51,7 +51,7 @@ public class ArtAddressPacketTest {
         byte[] swOut = new byte[]{(byte)0x0E, (byte)0x0F, (byte)0x01, (byte)0x02};
         byte subSwitch = (byte) 0x21;
         byte swVideo = (byte) 0x00;
-        byte command = (byte) 0x04;//AcLedLocate: flash front panel indicators rapidly
+        byte command = ArtAddressCommandCodes.AC_LED_LOCATE;
 
         ArtAddressPacket pOrig = new ArtAddressPacket(netSwitch, shortName, longName, swIn, swOut, subSwitch, swVideo, command);
         byte[] bytes = pOrig.getPacketBytes();
@@ -81,7 +81,7 @@ public class ArtAddressPacketTest {
         byte[] swOut = new byte[]{(byte)0x0E, (byte)0x0F, (byte)0x01, (byte)0x02};
         byte subSwitch = (byte) 0x21;
         byte swVideo = (byte) 0x00;
-        byte command = (byte) 0x04;//AcLedLocate: flash front panel indicators rapidly
+        byte command = ArtAddressCommandCodes.AC_LED_LOCATE;
 
         ArtAddressPacket p = new ArtAddressPacket(netSwitch, shortName, longName, swIn, swOut, subSwitch, swVideo, command);
         ArtnetController controller = ArtnetControllerFactory.getTestingInstance();
@@ -113,7 +113,7 @@ public class ArtAddressPacketTest {
         byte[] swOut = new byte[]{(byte)0x0E, (byte)0x0F, (byte)0x01, (byte)0x02};
         byte subSwitch = (byte) 0x21;
         byte swVideo = (byte) 0x00;
-        byte command = (byte) 0x04;//AcLedLocate: flash front panel indicators rapidly
+        byte command = ArtAddressCommandCodes.AC_LED_LOCATE;
 
         ArtAddressPacket pOrig = new ArtAddressPacket(netSwitch, shortName, longName, swIn, swOut, subSwitch, swVideo, command);
         byte[] bytes = pOrig.getPacketBytes();
