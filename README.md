@@ -26,3 +26,5 @@ Not supported:
 
 * Firmware upgrades over Art-Net (ArtFirmwareMaster, ArtFirmwareReply, UBEA file upload)
 * RDM (ArtTodRequest, ArtTodData, ArtTodControl, ArtRdm, ArtRdmSub)
+
+License: [LGPL version 3](http://www.gnu.org/licenses/lgpl-3.0.en.html)
