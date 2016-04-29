@@ -20,6 +20,8 @@ package me.sschaeffner.jArtnet.packets;
 import me.sschaeffner.jArtnet.ArtnetNode;
 import me.sschaeffner.jArtnet.MalformedArtnetPacketException;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * An Art-Net packet.
  *
@@ -70,9 +72,14 @@ public abstract class ArtnetPacket {
      * @return      null terminated ASCII byte array as String
      */
     public static String asString(byte[] bytes) {
-        String s = "";
-        for (int i = 0; i < bytes.length && bytes[i] != 0; i++) s += (char)bytes[i];
-        return s;
+        int stringLength = bytes.length;
+        for (int i = 0; i < bytes.length; i++){
+            if (bytes[i] == 0) {
+                stringLength = i;
+                break;
+            }
+        }
+        return new String(bytes, 0, stringLength, StandardCharsets.US_ASCII);
     }
 
     /**
@@ -172,12 +179,10 @@ public abstract class ArtnetPacket {
      * @return  the String as a null terminated ASCII byte array
      */
     public static byte[] asASCIIArrayNullTerminated(String s) {
-        char[] cs = s.toCharArray();
-        byte[] chars = new byte[cs.length + 1];
-        for (int i = 0; i < cs.length; i++) {
-            chars[i] = (byte) cs[i];
-        }
-        return chars;
+        byte[] withoutNullTermination = s.getBytes(StandardCharsets.US_ASCII);
+        byte[] withNullTermination = new byte[withoutNullTermination.length + 1];
+        System.arraycopy(withoutNullTermination, 0, withNullTermination, 0, withoutNullTermination.length);
+        return withNullTermination;
     }
 
     /**
@@ -187,11 +192,10 @@ public abstract class ArtnetPacket {
      * @return              the String as a null terminated ASCII byte array
      */
     public static byte[] asASCIIArrayNullTerminated(String s, int fixedLength) {
-        char[] cs = s.toCharArray();
-        byte[] chars = new byte[fixedLength];
-        for (int i = 0; i < cs.length && i < fixedLength - 1; i++) {
-            chars[i] = (byte) cs[i];
-        }
-        return chars;
+        byte[] withoutNullTermination = s.getBytes(StandardCharsets.US_ASCII);
+        byte[] withNullTermination = new byte[fixedLength];
+        int copyLength = (fixedLength > withoutNullTermination.length + 1) ? withoutNullTermination.length : fixedLength - 1;
+        System.arraycopy(withoutNullTermination, 0, withNullTermination, 0, copyLength);
+        return withNullTermination;
     }
 }
